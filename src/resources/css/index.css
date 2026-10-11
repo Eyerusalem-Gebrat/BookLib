@@ -1,6 +1,12 @@
+/* ==========================================================================
+   BookLib - Books Index Page
+   Cards: Warm Earthy Light Brown
+   Canvas: Beige
+   ========================================================================== */
+
 .books-page {
-  padding: 1.5rem;
-  max-width: 900px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .books-header {
@@ -8,30 +14,67 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
 }
 
 .books-header h1 {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-family: var(--font-sans);
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin: 0;
 }
 
 .flash-success {
-  margin-bottom: 1rem;
-  padding: 0.75rem 1rem;
-  border: 1px solid #16a34a;
-  border-radius: 6px;
-  background: rgba(22, 163, 74, 0.15);
+  margin-bottom: 1.75rem;
+  padding: 0.85rem 1.25rem;
+  border: 1px solid var(--status-finished-border);
+  border-radius: 12px;
+  background: var(--status-finished-bg);
+  color: var(--status-finished-text);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow: 0 4px 16px var(--status-finished-glow);
+}
+
+.flash-success::before {
+  content: '✓';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--status-finished-text);
+  color: var(--text-inverse);
+  font-size: 0.8125rem;
+  font-weight: 800;
 }
 
 .empty-message {
-  padding: 2rem 0;
-  opacity: 0.7;
+  padding: 4.5rem 2rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  background: var(--card-brown);
+  border: 2px dashed var(--border-accent);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px var(--shadow-sm);
+  margin: 1.5rem 0;
 }
 
+/* 2-Column Grid of Brown Book Cards */
 .book-list {
   display: grid;
-  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -39,47 +82,165 @@
 
 .book-card {
   display: flex;
-  gap: 1rem;
-  padding: 1rem;
-  border: 1px solid rgba(128, 128, 128, 0.35);
-  border-radius: 8px;
+  gap: 1.15rem;
+  padding: 1.25rem 1.15rem;
+  background: var(--card-brown);
+  border: 1px solid var(--card-brown-border);
+  border-radius: 16px;
+  box-shadow: 0 4px 18px var(--shadow-md);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.25s ease;
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  box-sizing: border-box;
+  color: var(--card-text);
 }
 
+.book-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: 0 10px 28px var(--shadow-lg), 0 0 16px var(--card-brown-glow);
+}
+
+/* Half-Sized Poster on Brown Card */
 .book-poster {
-  width: 100px;
-  height: 150px;
+  width: 90px;
+  height: 135px;
   flex-shrink: 0;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 8px;
+  border: 1px solid var(--border-poster);
+  box-shadow: 0 4px 14px var(--shadow-poster);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.book-card:hover .book-poster {
+  transform: scale(1.03) rotate(-1deg);
+  box-shadow: 0 8px 22px var(--shadow-poster-hover);
 }
 
 .book-info {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .book-info h2 {
+  font-family: var(--font-sans);
   font-size: 1.15rem;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.3;
 }
 
 .book-info h2 a {
   text-decoration: none;
-  color: inherit;
+  color: var(--card-text);
+  transition: color 0.2s ease;
 }
 
 .book-info h2 a:hover {
-  text-decoration: underline;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.book-info h2 a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .book-description {
-  margin: 0.5rem 0;
-  font-size: 0.9rem;
-  opacity: 0.85;
+  margin: 0.45rem 0;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--card-text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.book-card .book-actions {
+  margin-top: 0.75rem;
+  gap: 0.5rem;
+}
+
+.book-card .book-actions .btn {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.875rem;
+  background: var(--btn-card-bg);
+  border-color: var(--btn-card-border);
+  color: var(--btn-card-text);
+}
+
+.book-card .book-actions .btn:hover {
+  background: var(--btn-card-hover-bg);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.book-card .book-actions .btn-danger {
+  background: var(--danger-bg);
+  border-color: var(--danger-border);
+  color: var(--danger);
+}
+
+.book-card .book-actions .btn-danger:hover {
+  background: var(--danger-hover);
+  border-color: var(--danger-hover);
+  color: var(--text-inverse);
+}
+
+@media (max-width: 768px) {
+  .book-list {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 600px) {
+  .books-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .books-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .books-header .btn {
+    width: 100%;
+  }
+
   .book-card {
     flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+
+  .book-poster {
+    width: 110px;
+    height: 165px;
+  }
+
+  .book-info {
+    width: 100%;
+  }
+
+  .book-actions {
+    width: 100%;
+  }
+
+  .book-actions .btn {
+    flex: 1;
   }
 }

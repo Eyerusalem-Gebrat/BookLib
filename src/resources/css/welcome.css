@@ -1,80 +1,264 @@
+/* ==========================================================================
+   BookLib - Welcome Landing Page
+   Canvas: Beige
+   Header: Warm Earthy Light Brown
+   Feature Cards: Warm Earthy Light Brown
+   ========================================================================== */
+
 .welcome-page {
   min-height: 100vh;
-  padding: 1.5rem;
-  max-width: 1000px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 0 5rem 0;
+  box-sizing: border-box;
+  position: relative;
+  overflow-x: hidden;
+  background-color: var(--page-bg-color);
+  background-image:
+    radial-gradient(circle at 12% 18%, var(--blob-1) 0%, transparent 45%),
+    radial-gradient(circle at 88% 22%, var(--blob-2) 0%, transparent 40%),
+    radial-gradient(circle at 50% 60%, var(--blob-3) 0%, transparent 50%),
+    var(--page-bg);
+  background-repeat: no-repeat;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
 }
 
+/* Warm Earthy Light Brown Header Bar on Welcome Page (Full Width) */
 .welcome-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 4rem;
+  padding: 1rem 2.5rem;
+  background: var(--header-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--header-border);
+  box-shadow: 0 2px 10px var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 4.5rem;
+}
+
+/* Accent bottom border on header */
+.welcome-header::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--header-border) 0%, var(--accent) 50%, var(--header-border) 100%);
+  opacity: 0.85;
 }
 
 .welcome-logo {
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  user-select: none;
 }
 
 .welcome-nav {
   display: flex;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.welcome-nav .btn {
+  background: var(--btn-card-bg);
+  border-color: var(--header-pill-border);
+  color: var(--header-text);
+}
+
+.welcome-nav .btn:hover {
+  background: var(--btn-card-hover-bg);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.welcome-nav .btn-primary {
+  background: linear-gradient(135deg, var(--btn-primary-bg-start) 0%, var(--btn-primary-bg-end) 100%);
+  border-color: var(--primary-dark);
+  color: var(--btn-primary-text);
+}
+
+.welcome-nav .btn-primary:hover {
+  background: linear-gradient(135deg, var(--btn-primary-hover-start) 0%, var(--btn-primary-hover-end) 100%);
+  color: var(--text-inverse);
 }
 
 .welcome-hero {
   text-align: center;
-  max-width: 600px;
-  margin: 0 auto 4rem;
+  max-width: 840px;
+  margin: 0 auto 5rem;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 10;
 }
 
 .welcome-hero h1 {
-  font-size: 2.4rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+  font-family: var(--font-sans);
+  font-size: 3.25rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.25rem;
+  background: linear-gradient(135deg, var(--hero-gradient-1) 0%, var(--hero-gradient-2) 50%, var(--hero-gradient-3) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .welcome-hero p {
-  font-size: 1.05rem;
-  line-height: 1.6;
-  opacity: 0.8;
-  margin-bottom: 1.5rem;
+  font-family: var(--font-sans);
+  font-size: 1.2rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+  max-width: 580px;
+  margin: 0 auto 2.25rem;
+  font-weight: 400;
 }
 
 .welcome-cta {
-  padding: 0.7rem 1.5rem;
-  font-size: 1rem;
+  padding: 0.85rem 2.25rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, var(--btn-primary-bg-start) 0%, var(--btn-primary-bg-end) 100%);
+  border: 1px solid var(--primary-dark);
+  color: var(--btn-primary-text);
+  box-shadow: 0 6px 20px var(--primary-glow);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.welcome-cta:hover {
+  transform: translateY(-3px) scale(1.02);
+  background: linear-gradient(135deg, var(--btn-primary-hover-start) 0%, var(--btn-primary-hover-end) 100%);
+  border-color: var(--primary-hover);
+  box-shadow: 0 10px 28px var(--shadow-lg);
+  color: var(--text-inverse);
 }
 
 .welcome-features {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+  gap: 1.75rem;
+  position: relative;
+  z-index: 10;
+  max-width: 1240px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 2rem;
+  box-sizing: border-box;
 }
 
+/* Feature Cards: Warm Earthy Light Brown */
 .welcome-feature {
-  padding: 1.25rem;
-  border: 1px solid rgba(128, 128, 128, 0.35);
-  border-radius: 8px;
+  padding: 2rem 1.6rem;
+  background: var(--card-brown);
+  border: 1px solid var(--card-brown-border);
+  border-radius: 16px;
+  box-shadow: 0 4px 18px var(--shadow-md);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.25s ease;
+  position: relative;
+  overflow: hidden;
+  color: var(--card-text);
+}
+
+.welcome-feature::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 100%);
+  opacity: 0.9;
+}
+
+.welcome-feature:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent);
+  box-shadow: 0 14px 35px var(--shadow-lg), 0 0 20px var(--card-brown-glow);
 }
 
 .welcome-feature h2 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 0.4rem;
+  font-family: var(--font-sans);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--card-text);
+  margin-bottom: 0.65rem;
 }
 
 .welcome-feature p {
-  font-size: 0.9rem;
-  opacity: 0.8;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--card-text-muted);
+  margin: 0;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
   .welcome-features {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding: 0 1.25rem;
   }
 
   .welcome-hero h1 {
-    font-size: 1.8rem;
+    font-size: 2.4rem;
+  }
+
+  .welcome-hero p {
+    font-size: 1.05rem;
+  }
+
+  .welcome-hero {
+    margin-bottom: 3.5rem;
+  }
+
+  .welcome-header {
+    margin-bottom: 3rem;
+    padding: 0.85rem 1.25rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .welcome-page {
+    padding-bottom: 3rem;
+  }
+
+  .welcome-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .welcome-hero h1 {
+    font-size: 2rem;
+  }
+
+  .welcome-logo {
+    font-size: 1.25rem;
+  }
+
+  .welcome-cta {
+    width: 100%;
+    box-sizing: border-box;
   }
 }

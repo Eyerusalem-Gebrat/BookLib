@@ -10,5 +10,5 @@ Route::post('/login', [AuthTokenController::class, 'store']);
 // Everything in this group needs a valid token
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthTokenController::class, 'destroy']);
-    Route::apiResource('books', BookApiController::class);
+    Route::apiResource('books', BookApiController::class)->names('api.books');
 });

@@ -35,4 +35,12 @@ class AuthTokenController extends Controller
             'user' => $user,
         ]);
     }
+
+        // Log out: delete only the token that made this request
+    public function destroy(Request $request): JsonResponse
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json(['message' => 'Logged out.']);
+    }
 }

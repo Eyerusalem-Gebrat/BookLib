@@ -1,114 +1,519 @@
-/* Buttons */
+/* ==========================================================================
+   BookLib - Common Styles & CSS Custom Properties
+   Theme: Warm Earthy Light Brown Cards & Header, Beige Canvas
+   ========================================================================== */
+
+:root {
+  /* System Font Stack */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  /* 1. Header: Warm Earthy Light Brown */
+  --header-bg: #ba8f6a;
+  --header-bg-glass: rgba(186, 143, 106, 0.94);
+  --header-border: #a47752;
+  --header-text: #1a1007;
+  --header-text-muted: #4d331e;
+  --header-pill-bg: #c9a380;
+  --header-pill-border: #a47752;
+
+  /* 2. Page Canvas (Below the header): Beige */
+  --page-bg-color: #ede4d4;
+  --page-bg: linear-gradient(180deg, #f2eadc 0%, #ede4d4 38%, #e5dbc9 100%);
+  --surface-alt: #dfd3be;
+
+  /* 3. Cards: Warm Earthy Light Brown */
+  --card-brown: #ba8f6a;
+  --card-brown-hover: #c29772;
+  --card-brown-border: #a47752;
+  --card-brown-glow: rgba(124, 52, 22, 0.18);
+  --card-text: #1a1007;
+  --card-text-muted: #4d331e;
+  --card-text-dim: #6b4d32;
+
+  /* Surfaces & Defaults */
+  --surface: var(--card-brown);
+  --surface-inset: #f8f2e7;
+  --border: var(--card-brown-border);
+  --border-hover: #7c3416;
+  --border-accent: #a47752;
+  --border-poster: #8e623f;
+  --text: #1a1007;
+  --text-muted: #573c24;
+  --text-inverse: #ffffff;
+  --text-dark-btn: #ffffff;
+  --text-dark-btn-hover: #ffffff;
+
+  /* Accent & Terracotta / Rust Highlights */
+  --accent: #7c3416;
+  --accent-hover: #682a0f;
+  --accent-light: #f5ebe1;
+  --accent-secondary: #9c4c23;
+  --accent-glow: rgba(124, 52, 22, 0.28);
+
+  /* Primary Button Tokens (Rich Terracotta Sienna) */
+  --primary: #7c3416;
+  --primary-hover: #682a0f;
+  --primary-dark: #52200a;
+  --primary-glow: rgba(124, 52, 22, 0.32);
+  --primary-focus: rgba(124, 52, 22, 0.38);
+
+  --btn-primary-bg-start: #7c3416;
+  --btn-primary-bg-end: #65280e;
+  --btn-primary-hover-start: #8e3d1c;
+  --btn-primary-hover-end: #742e12;
+  --btn-primary-text: #fffdf9;
+
+  /* Secondary / Card Buttons (Soft Beige/Sand on warm earthy brown) */
+  --btn-card-bg: #dfd1be;
+  --btn-card-border: #a47752;
+  --btn-card-text: #1a1007;
+  --btn-card-hover-bg: #d4c4ae;
+
+  /* State & Alert Colors */
+  --success: #225232;
+  --success-dark: #163b22;
+  --warning: #874706;
+  --warning-dark: #6e3704;
+  --danger: #9e2a1e;
+  --danger-hover: #861f14;
+  --danger-bg: #f5e2de;
+  --danger-border: #e8bdb5;
+  --danger-glow: rgba(158, 42, 30, 0.22);
+
+  /* Status Badges */
+  --status-want-bg: #dfd7ce;
+  --status-want-text: #382f25;
+  --status-want-border: #c4baa9;
+  --status-want-glow: rgba(56, 47, 37, 0.15);
+
+  --status-reading-bg: #fdecc8;
+  --status-reading-text: #7c3e06;
+  --status-reading-border: #f0ce84;
+  --status-reading-glow: rgba(201, 106, 8, 0.2);
+
+  --status-finished-bg: #d9e8d4;
+  --status-finished-text: #1e462b;
+  --status-finished-border: #b5d3ad;
+  --status-finished-glow: rgba(30, 70, 43, 0.2);
+
+  /* Progress Bar */
+  --progress-track: #dfd1be;
+  --progress-fill-start: #8e3d1c;
+  --progress-fill-mid: #7c3416;
+  --progress-fill-end: #65280e;
+
+  /* Inputs on Warm Earthy Brown Cards (Soft Cream Inset) */
+  --input-bg: #f8f2e7;
+  --input-border: #a47752;
+  --input-text: #1a1007;
+  --select-option-bg: #f8f2e7;
+  --select-option-color: #1a1007;
+
+  /* Empty poster placeholder tokens */
+  --empty-poster-bg: #c9a380;
+  --empty-poster-border: #9b704d;
+  --empty-poster-text: #4d331e;
+
+  /* File input tokens */
+  --file-input-bg: #c9a380;
+  --file-input-hover-bg: #be9774;
+
+  /* Shadows */
+  --shadow-sm: rgba(45, 28, 14, 0.08);
+  --shadow-md: rgba(45, 28, 14, 0.14);
+  --shadow-lg: rgba(45, 28, 14, 0.22);
+  --shadow-xl: rgba(45, 28, 14, 0.32);
+  --shadow-poster: rgba(40, 24, 10, 0.28);
+  --shadow-poster-hover: rgba(40, 24, 10, 0.42);
+
+  /* Ambient Welcome Blobs */
+  --blob-1: rgba(201, 163, 128, 0.45);
+  --blob-2: rgba(223, 209, 190, 0.6);
+  --blob-3: rgba(186, 143, 106, 0.35);
+
+  /* Editorial Hero Gradient */
+  --hero-gradient-1: #1a1007;
+  --hero-gradient-2: #52200a;
+  --hero-gradient-3: #7c3416;
+
+  /* Root Document Default Background */
+  background-color: #ede4d4;
+  color: #1a1007;
+}
+
+/* Ensure Warm Earthy Light Brown Cards & Header, and Beige Canvas persist across dark mode */
+.dark,
+@media (prefers-color-scheme: dark) {
+  :root {
+    --header-bg: #ba8f6a;
+    --header-bg-glass: rgba(186, 143, 106, 0.94);
+    --header-border: #a47752;
+    --header-text: #1a1007;
+    --header-text-muted: #4d331e;
+    --header-pill-bg: #c9a380;
+    --header-pill-border: #a47752;
+
+    --page-bg-color: #ede4d4;
+    --page-bg: linear-gradient(180deg, #f2eadc 0%, #ede4d4 38%, #e5dbc9 100%);
+    --surface-alt: #dfd3be;
+
+    --card-brown: #ba8f6a;
+    --card-brown-hover: #c29772;
+    --card-brown-border: #a47752;
+    --card-brown-glow: rgba(124, 52, 22, 0.18);
+    --card-text: #1a1007;
+    --card-text-muted: #4d331e;
+    --card-text-dim: #6b4d32;
+
+    --surface: var(--card-brown);
+    --surface-inset: #f8f2e7;
+    --border: var(--card-brown-border);
+    --border-hover: #7c3416;
+    --border-accent: #a47752;
+    --border-poster: #8e623f;
+    --text: #1a1007;
+    --text-muted: #573c24;
+    --text-inverse: #ffffff;
+    --text-dark-btn: #ffffff;
+    --text-dark-btn-hover: #ffffff;
+
+    --accent: #7c3416;
+    --accent-hover: #682a0f;
+    --accent-light: #f5ebe1;
+    --accent-secondary: #9c4c23;
+    --accent-glow: rgba(124, 52, 22, 0.28);
+
+    --primary: #7c3416;
+    --primary-hover: #682a0f;
+    --primary-dark: #52200a;
+    --primary-glow: rgba(124, 52, 22, 0.32);
+    --primary-focus: rgba(124, 52, 22, 0.38);
+
+    --btn-primary-bg-start: #7c3416;
+    --btn-primary-bg-end: #65280e;
+    --btn-primary-hover-start: #8e3d1c;
+    --btn-primary-hover-end: #742e12;
+    --btn-primary-text: #fffdf9;
+
+    --btn-card-bg: #dfd1be;
+    --btn-card-border: #a47752;
+    --btn-card-text: #1a1007;
+    --btn-card-hover-bg: #d4c4ae;
+
+    --status-want-bg: #dfd7ce;
+    --status-want-text: #382f25;
+    --status-want-border: #c4baa9;
+    --status-want-glow: rgba(56, 47, 37, 0.15);
+
+    --status-reading-bg: #fdecc8;
+    --status-reading-text: #7c3e06;
+    --status-reading-border: #f0ce84;
+    --status-reading-glow: rgba(201, 106, 8, 0.2);
+
+    --status-finished-bg: #d9e8d4;
+    --status-finished-text: #1e462b;
+    --status-finished-border: #b5d3ad;
+    --status-finished-glow: rgba(30, 70, 43, 0.2);
+
+    --input-bg: #f8f2e7;
+    --input-border: #a47752;
+    --input-text: #1a1007;
+    --select-option-bg: #f8f2e7;
+    --select-option-color: #1a1007;
+
+    --empty-poster-bg: #c9a380;
+    --empty-poster-border: #9b704d;
+    --empty-poster-text: #4d331e;
+
+    --file-input-bg: #c9a380;
+    --file-input-hover-bg: #be9774;
+
+    --blob-1: rgba(201, 163, 128, 0.45);
+    --blob-2: rgba(223, 209, 190, 0.6);
+    --blob-3: rgba(186, 143, 106, 0.35);
+
+    --hero-gradient-1: #1a1007;
+    --hero-gradient-2: #52200a;
+    --hero-gradient-3: #7c3416;
+
+    background-color: #ede4d4;
+    color: #1a1007;
+  }
+}
+
+/* ==========================================================================
+   Document & Base Reset (Full page edge-to-edge canvas)
+   ========================================================================== */
+
+html,
+html.dark,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--page-bg-color) !important;
+  background-image: var(--page-bg) !important;
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font-sans);
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Buttons (Identical rendering for <a> links and <button> elements)
+   ========================================================================== */
+
 .btn {
-  display: inline-block;
-  padding: 0.4rem 0.9rem;
-  border: 1px solid rgba(128, 128, 128, 0.5);
-  border-radius: 6px;
-  background: transparent;
-  color: inherit;
-  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
+  padding: 0.55rem 1.25rem;
+  border-radius: 9999px;
+  border: 1px solid var(--btn-card-border);
+  background: var(--btn-card-bg);
+  color: var(--btn-card-text);
   cursor: pointer;
   text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.2s ease,
+              border-color 0.2s ease,
+              box-shadow 0.2s ease,
+              color 0.2s ease;
+  box-shadow: 0 1px 3px var(--shadow-sm);
 }
 
 .btn:hover {
-  background: rgba(128, 128, 128, 0.2);
+  background: var(--btn-card-hover-bg);
+  border-color: var(--border-hover);
+  color: var(--card-text);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--shadow-md);
+}
+
+.btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px var(--shadow-sm);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--primary-focus);
 }
 
 .btn:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  pointer-events: none;
 }
 
+/* Gradient Primary Button */
 .btn-primary {
-  background: #4f46e5;
-  border-color: #4f46e5;
-  color: #fff;
+  background: linear-gradient(135deg, var(--btn-primary-bg-start) 0%, var(--btn-primary-bg-end) 100%);
+  border: 1px solid var(--primary-dark);
+  color: var(--btn-primary-text);
+  box-shadow: 0 4px 14px var(--primary-glow);
 }
 
 .btn-primary:hover {
-  background: #4338ca;
+  background: linear-gradient(135deg, var(--btn-primary-hover-start) 0%, var(--btn-primary-hover-end) 100%);
+  border-color: var(--primary-hover);
+  color: var(--text-inverse);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--shadow-md);
 }
 
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px var(--primary-glow);
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--primary-focus);
+}
+
+/* Danger Button */
 .btn-danger {
-  border-color: #dc2626;
-  color: #dc2626;
+  background: var(--danger-bg);
+  border-color: var(--danger-border);
+  color: var(--danger);
+  box-shadow: 0 1px 3px var(--shadow-sm);
 }
 
 .btn-danger:hover {
-  background: rgba(220, 38, 38, 0.15);
+  background: var(--danger-hover);
+  border-color: var(--danger-hover);
+  color: var(--text-inverse);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px var(--danger-glow);
 }
 
+.btn-danger:active {
+  transform: translateY(0);
+}
+
+.btn-danger:focus-visible {
+  outline: 2px solid var(--danger);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--danger-glow);
+}
+
+/* ==========================================================================
+   Navigation & Detail Elements
+   ========================================================================== */
+
 .back-link {
-  display: inline-block;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-  color: inherit;
-  opacity: 0.8;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--card-text-muted);
   text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .back-link:hover {
-  text-decoration: underline;
+  color: var(--accent);
+  transform: translateX(-3px);
+  text-decoration: none;
 }
 
-/* Book details used on the list and detail pages */
+.back-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .book-meta {
-  margin: 0.15rem 0;
-  font-size: 0.9rem;
-  opacity: 0.8;
+  margin: 0.25rem 0;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  color: var(--card-text-muted);
+  line-height: 1.5;
 }
 
 .book-actions {
   display: flex;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
 }
 
+/* Empty Poster Placeholder */
 .book-poster-empty {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px dashed rgba(128, 128, 128, 0.5);
-  font-size: 0.8rem;
-  opacity: 0.6;
+  text-align: center;
+  background: var(--empty-poster-bg);
+  border: 2px dashed var(--empty-poster-border);
+  color: var(--empty-poster-text);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.75rem;
+  box-sizing: border-box;
+  user-select: none;
 }
 
-/* Status badge */
+/* ==========================================================================
+   Status Badges
+   ========================================================================== */
+
 .status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.45rem 0;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+  width: fit-content;
+}
+
+.status-badge::before {
+  content: '';
   display: inline-block;
-  margin: 0.4rem 0;
-  padding: 0.15rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
 }
 
 .status-want_to_read {
-  background: rgba(234, 179, 8, 0.25);
+  background: var(--status-want-bg);
+  color: var(--status-want-text);
+  border-color: var(--status-want-border);
+  box-shadow: 0 0 10px var(--status-want-glow);
 }
 
 .status-reading {
-  background: rgba(59, 130, 246, 0.25);
+  background: var(--status-reading-bg);
+  color: var(--status-reading-text);
+  border-color: var(--status-reading-border);
+  box-shadow: 0 0 10px var(--status-reading-glow);
 }
 
 .status-finished {
-  background: rgba(22, 163, 74, 0.25);
+  background: var(--status-finished-bg);
+  color: var(--status-finished-text);
+  border-color: var(--status-finished-border);
+  box-shadow: 0 0 10px var(--status-finished-glow);
 }
 
-/* Progress bar */
+/* ==========================================================================
+   Progress Bar
+   ========================================================================== */
+
 .progress-bar {
-  height: 8px;
-  border-radius: 999px;
-  background: rgba(128, 128, 128, 0.3);
+  height: 10px;
+  border-radius: 9999px;
+  background: var(--progress-track);
   overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.25);
+  margin-top: 0.4rem;
 }
 
 .progress-fill {
   height: 100%;
-  background: #4f46e5;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--progress-fill-start) 0%, var(--progress-fill-mid) 50%, var(--progress-fill-end) 100%);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px var(--accent-glow);
 }
 
 .progress-text {
-  margin: 0.25rem 0 0;
-  font-size: 0.85rem;
+  margin: 0.35rem 0 0;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--card-text-muted);
 }

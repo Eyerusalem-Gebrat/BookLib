@@ -1,4 +1,5 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
+import { useEffect, useState } from 'react';
 import '../../../css/common.css';
 import '../../../css/index.css';
 
@@ -32,6 +33,18 @@ const statusLabels: Record<string, string> = {
 export default function BooksIndex({ books }: BooksIndexProps) {
   const { flash } = usePage<SharedProps>().props;
 
+  const [showFlash, setShowFlash] = useState(true);
+
+  useEffect(() => {
+    if (!flash?.success) return;
+
+    setShowFlash(true);
+    const timer = setTimeout(() => setShowFlash(false), 3000);
+
+    // Clean up the timer if the page changes before it finishes
+    return () => clearTimeout(timer);
+  }, [flash]);
+
   return (
     <>
       <Head title="My Books" />
@@ -43,7 +56,9 @@ export default function BooksIndex({ books }: BooksIndexProps) {
           </Link>
         </div>
 
-        {flash?.success && <div className="flash-success">{flash.success}</div>}
+        {flash?.success && showFlash && (
+          <div className="flash-success">{flash.success}</div>
+        )}
 
         {books.length === 0 ? (
           <p className="empty-message">You haven't added any books yet.</p>

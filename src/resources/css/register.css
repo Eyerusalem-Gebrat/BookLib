@@ -1,0 +1,19 @@
+.register-passwords {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.register-form .auth-btn {
+  background: linear-gradient(90deg, #ec4899, #f59e0b);
+}
+
+.register-form .auth-btn:hover {
+  box-shadow: 0 8px 20px rgba(236, 72, 153, 0.45);
+}
+
+@media (max-width: 480px) {
+  .register-passwords {
+    grid-template-columns: 1fr;
+  }
+}
