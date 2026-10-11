@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Book;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,12 @@ class BookFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'user_id' => User::factory(),
+            'title' => fake()->sentence(),
+            'author' => fake()->name(),
+            'genre' => fake()->randomElement(['Novel', 'Biography', 'Fiction', 'Non-fiction', 'Science Fiction', 'Fantasy', 'Mystery', 'Romance', 'Crime', 'Thriller', 'Horror', 'Self-help', 'History', 'Philosophy', 'Poetry']),
+            'description' => fake()->paragraph(),
+            'status' => fake()->randomElement(['want_to_read', 'reading', 'finished']),
         ];
     }
 }
