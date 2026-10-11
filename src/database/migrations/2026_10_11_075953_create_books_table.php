@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('genre')->nullable();
             $table->text('description')->nullable();
             $table->string('status')->default('want_to_read');
+            $table->unsignedInteger('total_pages')->default(0);
+            $table->unsignedInteger('current_page')->default(0);
+            $table->text('poster_path')->nullable();
             $table->timestamps();
         });
     }

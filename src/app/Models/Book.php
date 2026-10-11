@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['title', 'author', 'genre', 'description', 'status'])]
+#[Fillable(['title', 'author', 'genre', 'description', 'status', 'total_pages', 'current_page', 'poster_path'])]
 class Book extends Model
 {
     /**
