@@ -1,0 +1,6 @@
+.current-poster {
+  width: 120px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 4px;
+}

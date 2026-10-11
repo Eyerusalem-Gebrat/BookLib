@@ -1,0 +1,48 @@
+.show-page {
+  padding: 1.5rem;
+  max-width: 900px;
+}
+
+.show-layout {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid rgba(128, 128, 128, 0.35);
+  border-radius: 8px;
+}
+
+.show-poster {
+  width: 200px;
+  height: 300px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.show-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.show-info h1 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.show-description {
+  margin: 1rem 0;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+  .show-layout {
+    flex-direction: column;
+  }
+
+  .show-poster {
+    width: 100%;
+    max-width: 240px;
+  }
+}

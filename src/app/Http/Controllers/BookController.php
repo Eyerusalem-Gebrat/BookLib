@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class BookController extends Controller
 {
@@ -42,7 +43,16 @@ class BookController extends Controller
             'status' => ['required', 'in:reading,finished,want_to_read'],
             'total_pages' => ['required', 'integer', 'min:1'],
             'current_page' => ['required', 'integer', 'min:0', 'lte:total_pages'],
+            'poster' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
+
+        // Save the uploaded file and keep only its path
+        if ($request->hasFile('poster')) {
+            $validated['poster_path'] = $request->file('poster')->store('posters', 'public');
+        }
+
+        // "poster" is a file object, not a database column
+        unset($validated['poster']);
 
         $request->user()->books()->create($validated);
 
@@ -54,7 +64,10 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        //
+        Gate::authorize('view', $book);
+        return inertia('books/show', [
+            'book' => $book,
+        ]);
     }
 
     /**
@@ -72,8 +85,9 @@ class BookController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, Book $book): RedirectResponse
-    {
+   {
         Gate::authorize('update', $book);
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'author' => ['required', 'string', 'max:255'],
@@ -82,12 +96,25 @@ class BookController extends Controller
             'status' => ['required', 'in:reading,finished,want_to_read'],
             'total_pages' => ['required', 'integer', 'min:1'],
             'current_page' => ['required', 'integer', 'min:0', 'lte:total_pages'],
+            'poster' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
+
+        if ($request->hasFile('poster')) {
+            // Delete the old file first, so old posters don't pile up
+            if ($book->poster_path) {
+                Storage::disk('public')->delete($book->poster_path);
+            }
+
+            $validated['poster_path'] = $request->file('poster')->store('posters', 'public');
+        }
+
+        // "poster" is a file object, not a database column
+        unset($validated['poster']);
 
         $book->update($validated);
 
         return redirect()->route('books.index')->with('success', 'Book updated successfully.');
-    }
+   }
 
     /**
      * Remove the specified resource from storage.

@@ -1,4 +1,6 @@
-import { Head, router, Link } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import '../../../css/common.css';
+import '../../../css/index.css';
 
 type Book = {
   id: number;
@@ -16,6 +18,10 @@ type BooksIndexProps = {
   books: Book[];
 }
 
+type SharedProps = {
+  flash?: { success?: string | null };
+}
+
 // Maps the database value to a readable label
 const statusLabels: Record<string, string> = {
   want_to_read: 'Want to Read',
@@ -24,60 +30,93 @@ const statusLabels: Record<string, string> = {
 };
 
 export default function BooksIndex({ books }: BooksIndexProps) {
-    return (
-        <>
-            <Head title="My Books"/>
-            <div>
-                <h1>My Reading List</h1>
-                <ul>
-                    {books.map(book => {
-                        // Avoid dividing by zero
-                        const percent = book.total_pages > 0
-                            ? Math.round((book.current_page / book.total_pages) * 100)
-                            : 0;
+  const { flash } = usePage<SharedProps>().props;
 
-                        return (
-                            <li key={book.id}>
-                                {/* Poster: only shown if the book has one */}
-                                {book.poster_path && (
-                                    <img
-                                        src={`/storage/${book.poster_path}`}
-                                        alt={`Poster of ${book.title}`}
-                                        width={80}
-                                    />
-                                )}
+  return (
+    <>
+      <Head title="My Books" />
+      <div className="books-page">
+        <div className="books-header">
+          <h1>My Reading List</h1>
+          <Link href="/books/create" className="btn btn-primary">
+            Add Book
+          </Link>
+        </div>
 
-                                <h2>{book.title}</h2>
-                                <p>Author: {book.author}</p>
+        {flash?.success && <div className="flash-success">{flash.success}</div>}
 
-                                {/* Genre: only shown if not null */}
-                                {book.genre && <p>Genre: {book.genre}</p>}
+        {books.length === 0 ? (
+          <p className="empty-message">You haven't added any books yet.</p>
+        ) : (
+          <ul className="book-list">
+            {books.map((book) => {
+              // Avoid dividing by zero
+              const percent = book.total_pages > 0
+                ? Math.round((book.current_page / book.total_pages) * 100)
+                : 0;
 
-                                {/* Description: only shown if not null */}
-                                {book.description && <p>Description: {book.description}</p>}
+              return (
+                <li key={book.id} className="book-card">
+                  {book.poster_path ? (
+                    <img
+                      className="book-poster"
+                      src={`/storage/${book.poster_path}`}
+                      alt={`Poster of ${book.title}`}
+                    />
+                  ) : (
+                    <div className="book-poster book-poster-empty">No poster</div>
+                  )}
 
-                                <p>Status: {statusLabels[book.status]}</p>
-                                <p>
-                                    Progress: {book.current_page} / {book.total_pages} pages ({percent}%)
-                                </p>
+                  <div className="book-info">
+                    <h2>
+                      <Link href={`/books/${book.id}`}>{book.title}</Link>
+                    </h2>
+                    <p className="book-meta">by {book.author}</p>
+                    {book.genre && <p className="book-meta">Genre: {book.genre}</p>}
 
-                                <button
-                                    onClick={() => {
-                                        if (confirm(`Are you sure you want to delete "${book.title}"?`)) {
-                                            router.delete(`/books/${book.id}`);
-                                        }
-                                    }}
-                                >
-                                    Delete
-                                </button>
-                                <Link href={`/books/${book.id}/edit`}>Edit</Link>                               
-                            </li>
-                        );
+                    <span className={`status-badge status-${book.status}`}>
+                      {statusLabels[book.status]}
+                    </span>
 
-                    })}
-                </ul>
-            </div>
-        </>
-    );
+                    <div className="progress">
+                      <div className="progress-bar">
+                        <div
+                          className="progress-fill"
+                          style={{ width: `${percent}%` }}
+                        />
+                      </div>
+                      <p className="progress-text">
+                        {book.current_page} / {book.total_pages} pages ({percent}%)
+                      </p>
+                    </div>
+
+                    {book.description && (
+                      <p className="book-description">{book.description}</p>
+                    )}
+
+                    <div className="book-actions">
+                      <Link href={`/books/${book.id}/edit`} className="btn">
+                        Edit
+                      </Link>
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() => {
+                          if (confirm(`Are you sure you want to delete "${book.title}"?`)) {
+                            router.delete(`/books/${book.id}`);
+                          }
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
+    </>
+  );
 }
-    

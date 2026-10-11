@@ -1,5 +1,8 @@
 import { FormEvent } from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
+import '../../../css/common.css';
+import '../../../css/create.css';
+import '../../../css/edit.css';
 
 type Book = {
   id: number;
@@ -10,6 +13,7 @@ type Book = {
   status: string;
   total_pages: number;
   current_page: number;
+  poster_path: string | null;
 }
 
 type BooksEditProps = {
@@ -17,7 +21,8 @@ type BooksEditProps = {
 }
 
 export default function BooksEdit({ book }: BooksEditProps) {
-  const { data, setData, put, processing, errors } = useForm({
+  const { data, setData, post, processing, errors } = useForm({
+    _method: 'put',
     title: book.title,
     author: book.author,
     genre: book.genre ?? '',
@@ -25,21 +30,24 @@ export default function BooksEdit({ book }: BooksEditProps) {
     status: book.status,
     total_pages: String(book.total_pages),
     current_page: String(book.current_page),
+    poster: null as File | null,
   });
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    put(`/books/${book.id}`);
+    // A file upload needs a real POST; "_method: put" tells Laravel it is an update
+    post(`/books/${book.id}`, { forceFormData: true });
   };
 
   return (
     <>
       <Head title="Edit Book" />
-      <div>
+      <div className="form-page">
+        <Link href="/books" className="back-link">← Back to my books</Link>
         <h1>Edit Book</h1>
 
-        <form onSubmit={submit}>
-          <div>
+        <form onSubmit={submit} className="form-card">
+          <div className="form-group">
             <label htmlFor="title">Title</label>
             <input
               id="title"
@@ -47,10 +55,10 @@ export default function BooksEdit({ book }: BooksEditProps) {
               value={data.title}
               onChange={(e) => setData('title', e.target.value)}
             />
-            {errors.title && <div>{errors.title}</div>}
+            {errors.title && <div className="form-error">{errors.title}</div>}
           </div>
 
-          <div>
+          <div className="form-group">
             <label htmlFor="author">Author</label>
             <input
               id="author"
@@ -58,10 +66,10 @@ export default function BooksEdit({ book }: BooksEditProps) {
               value={data.author}
               onChange={(e) => setData('author', e.target.value)}
             />
-            {errors.author && <div>{errors.author}</div>}
+            {errors.author && <div className="form-error">{errors.author}</div>}
           </div>
 
-          <div>
+          <div className="form-group">
             <label htmlFor="genre">Genre</label>
             <input
               id="genre"
@@ -69,60 +77,115 @@ export default function BooksEdit({ book }: BooksEditProps) {
               value={data.genre}
               onChange={(e) => setData('genre', e.target.value)}
             />
-            {errors.genre && <div>{errors.genre}</div>}
+            {errors.genre && <div className="form-error">{errors.genre}</div>}
           </div>
 
-          <div>
+          <div className="form-group">
             <label htmlFor="description">Description</label>
             <textarea
               id="description"
               value={data.description}
               onChange={(e) => setData('description', e.target.value)}
             />
-            {errors.description && <div>{errors.description}</div>}
+            {errors.description && <div className="form-error">{errors.description}</div>}
           </div>
 
-          <div>
+          <div className="form-group">
+            <label htmlFor="poster">Change poster</label>
+            {book.poster_path && (
+              <img
+                className="current-poster"
+                src={`/storage/${book.poster_path}`}
+                alt={`Poster of ${book.title}`}
+              />
+            )}
+            <input
+              id="poster"
+              type="file"
+              accept="image/*"
+              onChange={(e) => setData('poster', e.target.files?.[0] ?? null)}
+            />
+            {errors.poster && <div className="form-error">{errors.poster}</div>}
+          </div>
+
+          <div className="form-group">
             <label htmlFor="status">Status</label>
             <select
               id="status"
               value={data.status}
-              onChange={(e) => setData('status', e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setData((prev) => ({
+                  ...prev,
+                  status: value,
+                  current_page:
+                    value === 'finished' && prev.total_pages !== ''
+                      ? prev.total_pages
+                      : prev.current_page,
+                }));
+              }}
             >
               <option value="want_to_read">Want to Read</option>
               <option value="reading">Reading</option>
               <option value="finished">Finished</option>
             </select>
-            {errors.status && <div>{errors.status}</div>}
+            {errors.status && <div className="form-error">{errors.status}</div>}
           </div>
 
-          <div>
-            <label htmlFor="total_pages">Total pages</label>
-            <input
-              id="total_pages"
-              type="number"
-              min={1}
-              value={data.total_pages}
-              onChange={(e) => setData('total_pages', e.target.value)}
-            />
-            {errors.total_pages && <div>{errors.total_pages}</div>}
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="total_pages">Total pages</label>
+              <input
+                id="total_pages"
+                type="number"
+                min={1}
+                value={data.total_pages}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setData((prev) => ({
+                    ...prev,
+                    total_pages: value,
+                    current_page:
+                      prev.status === 'finished' ? value : prev.current_page,
+                  }));
+                }}
+              />
+              {errors.total_pages && <div className="form-error">{errors.total_pages}</div>}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="current_page">Pages read</label>
+              <input
+                id="current_page"
+                type="number"
+                min={0}
+                value={data.current_page}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setData((prev) => {
+                    const total = Number(prev.total_pages);
+                    let status = prev.status;
+
+                    if (total > 0 && value !== '' && Number(value) >= total) {
+                      status = 'finished';
+                    } else if (prev.status === 'finished') {
+                      status = 'reading';
+                    }
+
+                    return { ...prev, current_page: value, status };
+                  });
+                }}
+              />
+              {errors.current_page && <div className="form-error">{errors.current_page}</div>}
+            </div>
           </div>
 
-          <div>
-            <label htmlFor="current_page">Pages read</label>
-            <input
-              id="current_page"
-              type="number"
-              min={0}
-              value={data.current_page}
-              onChange={(e) => setData('current_page', e.target.value)}
-            />
-            {errors.current_page && <div>{errors.current_page}</div>}
+          <div className="form-actions">
+            <button type="submit" className="btn btn-primary" disabled={processing}>
+              Save Changes
+            </button>
+            <Link href="/books" className="btn">Cancel</Link>
           </div>
-
-          <button type="submit" disabled={processing}>
-            Save Changes
-          </button>
         </form>
       </div>
     </>
