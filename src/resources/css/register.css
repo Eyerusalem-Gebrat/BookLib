@@ -1,3 +1,8 @@
+/* ==========================================================================
+   BookLib - Register Page Specific Styles
+   Theme: Consistent with Website Theme
+   ========================================================================== */
+
 .register-passwords {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -5,11 +10,17 @@
 }
 
 .register-form .auth-btn {
-  background: linear-gradient(90deg, #ec4899, #f59e0b);
+  background: linear-gradient(135deg, var(--btn-primary-bg-start) 0%, var(--btn-primary-bg-end) 100%);
+  border: 1px solid var(--primary-dark);
+  color: var(--btn-primary-text);
+  box-shadow: 0 4px 14px var(--primary-glow);
 }
 
 .register-form .auth-btn:hover {
-  box-shadow: 0 8px 20px rgba(236, 72, 153, 0.45);
+  background: linear-gradient(135deg, var(--btn-primary-hover-start) 0%, var(--btn-primary-hover-end) 100%);
+  border-color: var(--primary-hover);
+  box-shadow: 0 8px 22px var(--shadow-lg);
+  color: var(--text-inverse);
 }
 
 @media (max-width: 480px) {

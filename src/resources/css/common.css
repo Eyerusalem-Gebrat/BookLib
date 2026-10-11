@@ -3,12 +3,13 @@
    Theme: Warm Earthy Light Brown Cards & Header, Beige Canvas
    ========================================================================== */
 
-:root {
+:root,
+.dark {
   /* System Font Stack */
   --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
   /* 1. Header: Warm Earthy Light Brown */
-  --header-bg: #ba8f6a;
+  --header-bg: #d5b396;
   --header-bg-glass: rgba(186, 143, 106, 0.94);
   --header-border: #a47752;
   --header-text: #1a1007;
@@ -17,12 +18,12 @@
   --header-pill-border: #a47752;
 
   /* 2. Page Canvas (Below the header): Beige */
-  --page-bg-color: #ede4d4;
+  --page-bg-color: #fff8eb;
   --page-bg: linear-gradient(180deg, #f2eadc 0%, #ede4d4 38%, #e5dbc9 100%);
   --surface-alt: #dfd3be;
 
   /* 3. Cards: Warm Earthy Light Brown */
-  --card-brown: #ba8f6a;
+  --card-brown: #cba889;
   --card-brown-hover: #c29772;
   --card-brown-border: #a47752;
   --card-brown-glow: rgba(124, 52, 22, 0.18);
@@ -137,108 +138,8 @@
   --hero-gradient-3: #7c3416;
 
   /* Root Document Default Background */
-  background-color: #ede4d4;
-  color: #1a1007;
-}
-
-/* Ensure Warm Earthy Light Brown Cards & Header, and Beige Canvas persist across dark mode */
-.dark,
-@media (prefers-color-scheme: dark) {
-  :root {
-    --header-bg: #ba8f6a;
-    --header-bg-glass: rgba(186, 143, 106, 0.94);
-    --header-border: #a47752;
-    --header-text: #1a1007;
-    --header-text-muted: #4d331e;
-    --header-pill-bg: #c9a380;
-    --header-pill-border: #a47752;
-
-    --page-bg-color: #ede4d4;
-    --page-bg: linear-gradient(180deg, #f2eadc 0%, #ede4d4 38%, #e5dbc9 100%);
-    --surface-alt: #dfd3be;
-
-    --card-brown: #ba8f6a;
-    --card-brown-hover: #c29772;
-    --card-brown-border: #a47752;
-    --card-brown-glow: rgba(124, 52, 22, 0.18);
-    --card-text: #1a1007;
-    --card-text-muted: #4d331e;
-    --card-text-dim: #6b4d32;
-
-    --surface: var(--card-brown);
-    --surface-inset: #f8f2e7;
-    --border: var(--card-brown-border);
-    --border-hover: #7c3416;
-    --border-accent: #a47752;
-    --border-poster: #8e623f;
-    --text: #1a1007;
-    --text-muted: #573c24;
-    --text-inverse: #ffffff;
-    --text-dark-btn: #ffffff;
-    --text-dark-btn-hover: #ffffff;
-
-    --accent: #7c3416;
-    --accent-hover: #682a0f;
-    --accent-light: #f5ebe1;
-    --accent-secondary: #9c4c23;
-    --accent-glow: rgba(124, 52, 22, 0.28);
-
-    --primary: #7c3416;
-    --primary-hover: #682a0f;
-    --primary-dark: #52200a;
-    --primary-glow: rgba(124, 52, 22, 0.32);
-    --primary-focus: rgba(124, 52, 22, 0.38);
-
-    --btn-primary-bg-start: #7c3416;
-    --btn-primary-bg-end: #65280e;
-    --btn-primary-hover-start: #8e3d1c;
-    --btn-primary-hover-end: #742e12;
-    --btn-primary-text: #fffdf9;
-
-    --btn-card-bg: #dfd1be;
-    --btn-card-border: #a47752;
-    --btn-card-text: #1a1007;
-    --btn-card-hover-bg: #d4c4ae;
-
-    --status-want-bg: #dfd7ce;
-    --status-want-text: #382f25;
-    --status-want-border: #c4baa9;
-    --status-want-glow: rgba(56, 47, 37, 0.15);
-
-    --status-reading-bg: #fdecc8;
-    --status-reading-text: #7c3e06;
-    --status-reading-border: #f0ce84;
-    --status-reading-glow: rgba(201, 106, 8, 0.2);
-
-    --status-finished-bg: #d9e8d4;
-    --status-finished-text: #1e462b;
-    --status-finished-border: #b5d3ad;
-    --status-finished-glow: rgba(30, 70, 43, 0.2);
-
-    --input-bg: #f8f2e7;
-    --input-border: #a47752;
-    --input-text: #1a1007;
-    --select-option-bg: #f8f2e7;
-    --select-option-color: #1a1007;
-
-    --empty-poster-bg: #c9a380;
-    --empty-poster-border: #9b704d;
-    --empty-poster-text: #4d331e;
-
-    --file-input-bg: #c9a380;
-    --file-input-hover-bg: #be9774;
-
-    --blob-1: rgba(201, 163, 128, 0.45);
-    --blob-2: rgba(223, 209, 190, 0.6);
-    --blob-3: rgba(186, 143, 106, 0.35);
-
-    --hero-gradient-1: #1a1007;
-    --hero-gradient-2: #52200a;
-    --hero-gradient-3: #7c3416;
-
-    background-color: #ede4d4;
-    color: #1a1007;
-  }
+  background-color: var(--page-bg-color);
+  color: var(--text);
 }
 
 /* ==========================================================================
@@ -289,10 +190,10 @@ body {
   white-space: nowrap;
   user-select: none;
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-              background 0.2s ease,
-              border-color 0.2s ease,
-              box-shadow 0.2s ease,
-              color 0.2s ease;
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.2s ease;
   box-shadow: 0 1px 3px var(--shadow-sm);
 }
 
