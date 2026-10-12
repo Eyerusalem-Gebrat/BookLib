@@ -65,15 +65,37 @@ class BookApiController extends Controller
         $validated = $request->validate($this->rules());
 
         if ($request->hasFile('poster')) {
-            // Delete the old file first
-            if ($book->poster_path) {
-                Storage::disk('public')->delete($book->poster_path);
+            // Remember the path of the existing poster
+            $oldPosterPath = $book->poster_path;
+
+            // Store the new poster first
+            $newPosterPath = $request->file('poster')
+                ->store('posters', 'public');
+
+            // Stop if the new poster could not be stored
+            if (!$newPosterPath) {
+                return response()->json([
+                    'message' => 'Failed to upload the new poster.',
+                ], 500);
             }
-            $validated['poster_path'] = $request->file('poster')->store('posters', 'public');
+
+            // Use the new poster path for the database update
+            $validated['poster_path'] = $newPosterPath;
         }
+
         unset($validated['poster']);
 
+        // Update the book in the database
         $book->update($validated);
+
+        // Delete the old poster only after the update succeeds
+        if (
+            isset($newPosterPath) &&
+            $oldPosterPath &&
+            $oldPosterPath !== $newPosterPath
+        ) {
+            Storage::disk('public')->delete($oldPosterPath);
+        }
 
         return response()->json([
             'message' => 'Book updated successfully.',

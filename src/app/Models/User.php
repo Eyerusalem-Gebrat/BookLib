@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable; // Provides Laravel's us
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon; // Represents dates and times
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Laravel\Sanctum\HasApiTokens; // Provides API token functionality through Sanctum
+use Laravel\Passport\HasApiTokens; // Provides API token functionality through Sanctum
 
 // describing the attributes a user model may have
 /**

@@ -37,11 +37,16 @@ return [
     |
     */
 
+    // How laravel authenticates a request
     'guards' => [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'api' => [ 
+            'driver' => 'passport', 
+            'provider' => 'users', ],
     ],
 
     /*
