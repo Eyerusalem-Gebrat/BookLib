@@ -75,7 +75,10 @@ class BookApiController extends Controller
 
         $book->update($validated);
 
-        return response()->json($book);
+        return response()->json([
+            'message' => 'Book updated successfully.',
+            'book' => $book,
+        ]);
     }
 
     // Delete a book (only if it is yours)

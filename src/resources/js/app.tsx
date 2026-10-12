@@ -1,15 +1,17 @@
 import { createInertiaApp } from '@inertiajs/react';
-import { Toaster } from '@/components/ui/sonner';
+// Toastershows notifications like success or error messages
+import { Toaster } from '@/components/ui/sonner'; 
+// Enables small informational popups when hovering 
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { initializeTheme } from '@/hooks/use-appearance';
+import { initializeTheme } from '@/hooks/use-appearance'; // Apperance settings light/dark mode
 import AuthLayout from '@/layouts/auth-layout';
 import BooksLayout from '@/layouts/books-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'BookLib';
 
 void createInertiaApp({
-    title: (title) => (title ? `${title} - ${appName}` : appName),
+    title: (title) => appName,
     layout: (name) => {
         switch (true) {
             case name === 'welcome':
@@ -22,8 +24,8 @@ void createInertiaApp({
                 return BooksLayout;
         }
     },
-    strictMode: true,
-    withApp(app) {
+    strictMode: true, // to detect potential problems in the application
+    withApp(app) {  // app - the current page
         return (
             <TooltipProvider delayDuration={0}>
                 {app}
@@ -31,7 +33,7 @@ void createInertiaApp({
             </TooltipProvider>
         );
     },
-    progress: {
+    progress: { // during inertia navigation
         color: '#4B5563',
     },
 });

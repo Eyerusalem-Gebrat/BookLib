@@ -1,3 +1,6 @@
+// Link navigates between pages using inertia without a full page reload
+// router.delete sends a DELETE request to the server to delete a book
+// usePage is used to access shared props, such as flash messages, from the server.
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import '../../../css/common.css';
@@ -15,10 +18,12 @@ type Book = {
   poster_path: string | null;
 }
 
+// The data the page expects to receive
 type BooksIndexProps = {
   books: Book[];
 }
 
+// Flash messages, ? means optional
 type SharedProps = {
   flash?: { success?: string | null };
 }
@@ -46,6 +51,7 @@ export default function BooksIndex({ books }: BooksIndexProps) {
   }, [flash]);
 
   return (
+    // <> groups elements without adding an extra HTML element
     <>
       <Head title="My Books" />
       <div className="books-page">
@@ -118,6 +124,7 @@ export default function BooksIndex({ books }: BooksIndexProps) {
                         className="btn btn-danger"
                         onClick={() => {
                           if (confirm(`Are you sure you want to delete "${book.title}"?`)) {
+                            // send a delete request to this url 
                             router.delete(`/books/${book.id}`);
                           }
                         }}

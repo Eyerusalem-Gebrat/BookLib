@@ -5,14 +5,15 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Attributes\Hidden; // fields that are hidden from array and JSON output 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Foundation\Auth\User as Authenticatable; // Provides Laravel's user authentication functionality
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Carbon; // Represents dates and times
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Laravel\Sanctum\HasApiTokens;
+use Laravel\Sanctum\HasApiTokens; // Provides API token functionality through Sanctum
 
+// describing the attributes a user model may have
 /**
  * @property int $id
  * @property string $name
@@ -26,8 +27,10 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
+
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
+
 class User extends Authenticatable implements MustVerifyEmail
 {
     /**
@@ -38,7 +41,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Book::class);
     }
 
-    /** @use HasFactory<UserFactory> */
+    /** @use HasFactory<UserFactory> @use HasApiTokens @use Notifiable */
+    // To add the methods and properties of these traits
     use HasApiTokens, HasFactory, Notifiable;
 
     /**

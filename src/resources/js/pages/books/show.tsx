@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import '../../../css/common.css';
 import '../../../css/show.css';
 
@@ -72,6 +72,18 @@ export default function BooksShow({ book }: BooksShowProps) {
               <Link href={`/books/${book.id}/edit`} className="btn btn-primary">
                 Edit
               </Link>
+              <button
+                type="button"
+                className="btn btn-danger"
+                onClick={() => {
+                  if (confirm(`Are you sure you want to delete "${book.title}"?`)) {
+                    // send a delete request to this url 
+                    router.delete(`/books/${book.id}`);
+                  }
+                }}
+              >
+                Delete
+              </button>
             </div>
           </div>
         </div>

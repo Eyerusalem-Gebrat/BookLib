@@ -4,6 +4,7 @@ import '../../../css/common.css';
 import '../../../css/create.css';
 
 export default function BooksCreate() {
+  // useForm creates and manages the form state
   const { data, setData, post, processing, errors } = useForm({
     title: '',
     author: '',
@@ -16,6 +17,7 @@ export default function BooksCreate() {
   });
 
   const submit = (e: FormEvent) => {
+    // To not reload the page when form is submitted
     e.preventDefault();
     post('/books');
   };
@@ -77,7 +79,7 @@ export default function BooksCreate() {
               id="poster"
               type="file"
               accept="image/*"
-              onChange={(e) => setData('poster', e.target.files?.[0] ?? null)}
+              onChange={(e) => setData('poster', e.target.files?.[0] ?? null)} // User selected file or null
             />
             {errors.poster && <div className="form-error">{errors.poster}</div>}
           </div>
@@ -90,7 +92,7 @@ export default function BooksCreate() {
               onChange={(e) => {
                 const value = e.target.value;
                 setData((prev) => ({
-                  ...prev,
+                  ...prev, // copies the existing form fields into the new object 
                   status: value,
                   current_page:
                     value === 'finished' && prev.total_pages !== ''

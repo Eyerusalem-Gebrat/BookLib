@@ -1,8 +1,7 @@
-@import './common.css';
-
 /* ==========================================================================
-   BookLib - Authentication Pages (Login, Register, Forgot Password)
-   Theme: Warm Earthy Light Brown Card on Beige Canvas
+   BookLib - Authentication Layout & Core Styles
+   Editorial Aesthetic: Centered Pure White Card, Terracotta Book Badge,
+   Soft Peach Pill Inputs, Terracotta Pill Button
    ========================================================================== */
 
 .auth-page {
@@ -10,108 +9,123 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
+  padding: 2rem 1.5rem;
   box-sizing: border-box;
   color: var(--text);
   background-color: var(--page-bg-color);
-  background-image:
-    radial-gradient(circle at 15% 20%, var(--blob-1), transparent 45%),
-    radial-gradient(circle at 85% 80%, var(--blob-3), transparent 45%),
-    var(--page-bg);
+  background-image: var(--page-bg);
   background-repeat: no-repeat;
   background-attachment: fixed;
   font-family: var(--font-sans);
 }
 
+/* Pure Crisp White Card */
 .auth-card {
   width: 100%;
   max-width: 440px;
-  padding: 2.25rem;
+  padding: 3rem 2.5rem;
   box-sizing: border-box;
-  border: 1px solid var(--card-brown-border);
-  border-radius: 18px;
-  background: var(--card-brown);
-  box-shadow: 0 10px 30px var(--shadow-lg);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background: var(--card-bg);
+  box-shadow: var(--auth-card-shadow);
   color: var(--card-text);
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
+/* Brand Logo with Terracotta Book Icon */
 .auth-brand {
   display: block;
-  margin-bottom: 1.25rem;
-  text-align: center;
-  font-size: 1.75rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  margin-bottom: 0.35rem;
   text-decoration: none;
-  background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  transition: transform 0.2s ease, filter 0.2s ease;
+  font-family: var(--font-serif);
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: var(--text);
+  transition: opacity 0.2s ease;
+}
+
+.auth-brand::before {
+  content: '📖';
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--auth-badge-bg);
+  color: var(--auth-badge-text);
+  font-size: 1.5rem;
+  margin: 0 auto 1.25rem;
+  box-shadow: 0 4px 14px var(--primary-glow);
 }
 
 .auth-brand:hover {
-  transform: scale(1.03);
-  filter: brightness(1.1);
+  opacity: 0.9;
 }
 
 .auth-heading {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
   text-align: center;
+  width: 100%;
 }
 
 .auth-heading h1 {
-  font-family: var(--font-sans);
-  font-size: 1.45rem;
-  font-weight: 700;
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--card-text);
-  margin: 0;
+  margin: 0 0 0.35rem 0;
 }
 
 .auth-heading p {
-  margin: 0.35rem 0 0;
-  font-size: 0.9375rem;
+  margin: 0;
+  font-size: 0.8125rem;
   color: var(--card-text-muted);
 }
 
 .auth-form {
+  width: 100%;
   display: grid;
-  gap: 1.15rem;
+  gap: 1.2rem;
+  text-align: left;
 }
 
 .auth-field {
   display: grid;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
 
 .auth-field label {
   font-family: var(--font-sans);
-  font-size: 0.9rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: var(--card-text);
-  letter-spacing: 0.01em;
 }
 
+/* Soft Peach Rounded Inputs */
 .auth-field input {
   width: 100%;
   box-sizing: border-box;
-  padding: 0.7rem 0.9rem;
-  border: 1.5px solid var(--input-border);
-  border-radius: 10px;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--input-border);
+  border-radius: 9999px;
   background: var(--input-bg);
   color: var(--input-text);
   font-family: var(--font-sans);
-  font-size: 0.95rem;
+  font-size: 0.875rem;
   line-height: 1.5;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-  box-shadow: 0 1px 3px var(--shadow-sm);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: none;
 }
 
 .auth-field input::placeholder {
-  color: var(--card-text-dim);
+  color: var(--input-placeholder);
 }
 
 .auth-field input:hover {
@@ -121,13 +135,13 @@
 .auth-field input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--primary-focus), 0 2px 8px var(--shadow-sm);
+  box-shadow: 0 0 0 3px var(--primary-focus);
 }
 
 .auth-error {
   color: var(--danger);
   font-family: var(--font-sans);
-  font-size: 0.85rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -137,53 +151,50 @@
 
 .auth-error::before {
   content: '⚠';
-  font-size: 0.85rem;
+  font-size: 0.8125rem;
 }
 
 .auth-status {
+  width: 100%;
+  box-sizing: border-box;
   margin-bottom: 1.25rem;
   padding: 0.75rem 1rem;
   border: 1px solid var(--status-finished-border);
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--status-finished-bg);
   color: var(--status-finished-text);
   font-family: var(--font-sans);
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   font-weight: 600;
   text-align: center;
-  box-shadow: 0 2px 8px var(--status-finished-glow);
 }
 
+/* Terracotta Action Pill */
 .auth-btn {
   width: 100%;
   box-sizing: border-box;
-  margin-top: 0.35rem;
-  padding: 0.75rem 1.25rem;
-  border: 1px solid var(--primary-dark);
+  margin-top: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  border: none;
   border-radius: 9999px;
-  background: linear-gradient(135deg, var(--btn-primary-bg-start) 0%, var(--btn-primary-bg-end) 100%);
-  color: var(--btn-primary-text);
+  background: var(--primary);
+  color: var(--text-inverse);
   font-family: var(--font-sans);
-  font-size: 0.95rem;
-  font-weight: 700;
+  font-size: 0.9375rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.2s ease,
-              border-color 0.2s ease;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 4px 14px var(--primary-glow);
 }
 
 .auth-btn:hover {
-  background: linear-gradient(135deg, var(--btn-primary-hover-start) 0%, var(--btn-primary-hover-end) 100%);
-  border-color: var(--primary-hover);
-  color: var(--text-inverse);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 22px var(--shadow-lg);
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px var(--primary-glow);
 }
 
 .auth-btn:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px var(--primary-glow);
 }
 
 .auth-btn:focus-visible {
@@ -200,9 +211,10 @@
 }
 
 .auth-link {
-  color: var(--accent);
+  color: var(--kicker-color);
   font-weight: 600;
   text-decoration: none;
+  font-size: 0.8125rem;
   transition: color 0.2s ease;
 }
 
@@ -214,13 +226,16 @@
 .auth-switch {
   text-align: center;
   font-family: var(--font-sans);
-  font-size: 0.9rem;
+  font-size: 0.8125rem;
   color: var(--card-text-muted);
-  margin-top: 0.5rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0;
+  width: 100%;
 }
 
 .password-wrap {
   position: relative;
+  width: 100%;
 }
 
 .password-wrap input {
@@ -230,7 +245,7 @@
 .password-toggle {
   position: absolute;
   top: 50%;
-  right: 0.5rem;
+  right: 0.75rem;
   transform: translateY(-50%);
   display: flex;
   align-items: center;
@@ -241,12 +256,11 @@
   background: transparent;
   color: var(--card-text-muted);
   cursor: pointer;
-  transition: color 0.2s ease, background 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 .password-toggle:hover {
   color: var(--card-text);
-  background: var(--btn-card-bg);
 }
 
 .password-toggle:focus-visible {

@@ -1,5 +1,7 @@
 <?php
 
+// Prepares info Inertia needs including shared data.
+
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
@@ -14,6 +16,7 @@ class HandleInertiaRequests extends Middleware
      *
      * @var string
      */
+    // app refers to basic HTML doc (resources/views/app.blade.php) which is a place where inertia puts the react page
     protected $rootView = 'app';
 
     /**
@@ -21,6 +24,7 @@ class HandleInertiaRequests extends Middleware
      *
      * @see https://inertiajs.com/asset-versioning
      */
+    // handles frontend asset versioning to update it if old
     public function version(Request $request): ?string
     {
         return parent::version($request);
@@ -33,10 +37,11 @@ class HandleInertiaRequests extends Middleware
      *
      * @return array<string, mixed>
      */
+    // makes common data available to your React pages through Inertia
     public function share(Request $request): array
     {
         return [
-            ...parent::share($request),
+            ...parent::share($request), // obtains the shared data provided by Inertia's original middleware
             'name' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),

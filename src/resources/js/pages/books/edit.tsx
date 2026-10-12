@@ -36,7 +36,7 @@ export default function BooksEdit({ book }: BooksEditProps) {
   const submit = (e: FormEvent) => {
     e.preventDefault();
     // A file upload needs a real POST; "_method: put" tells Laravel it is an update
-    post(`/books/${book.id}`, { forceFormData: true });
+    post(`/books/${book.id}`, { forceFormData: true }); // tells inertia to send form data as FormData to support file uploads
   };
 
   return (

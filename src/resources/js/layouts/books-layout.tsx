@@ -1,4 +1,4 @@
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react'; // usePage - shared page info supplied by Inertia
 import type { ReactNode } from 'react';
 import '../../css/common.css';
 import '../../css/layout.css';
@@ -25,7 +25,7 @@ export default function BooksLayout({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <main className="app-main">{children}</main>
+      <main className="app-main">{children}</main>  
     </div>
   );
 }

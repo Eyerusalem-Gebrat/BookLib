@@ -1,30 +1,30 @@
 /* ==========================================================================
    BookLib - Register Page Specific Styles
-   Theme: Consistent with Website Theme
+   Editorial Aesthetic: Password Grid & Action Button
    ========================================================================== */
 
 .register-passwords {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+  width: 100%;
 }
 
 .register-form .auth-btn {
-  background: linear-gradient(135deg, var(--btn-primary-bg-start) 0%, var(--btn-primary-bg-end) 100%);
-  border: 1px solid var(--primary-dark);
-  color: var(--btn-primary-text);
+  background: var(--primary);
+  border: none;
+  color: var(--text-inverse);
   box-shadow: 0 4px 14px var(--primary-glow);
 }
 
 .register-form .auth-btn:hover {
-  background: linear-gradient(135deg, var(--btn-primary-hover-start) 0%, var(--btn-primary-hover-end) 100%);
-  border-color: var(--primary-hover);
-  box-shadow: 0 8px 22px var(--shadow-lg);
-  color: var(--text-inverse);
+  background: var(--primary-hover);
+  box-shadow: 0 6px 18px var(--primary-glow);
 }
 
 @media (max-width: 480px) {
   .register-passwords {
     grid-template-columns: 1fr;
+    gap: 1.2rem;
   }
 }

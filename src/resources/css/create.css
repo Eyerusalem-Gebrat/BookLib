@@ -1,45 +1,106 @@
 /* ==========================================================================
    BookLib - Book Creation & Editing Form
-   Card: Warm Earthy Light Brown
+   Editorial Aesthetic: Pure White Form Card, Soft Peach Inputs,
+   Dark Charcoal File Button, Terracotta Action Pills
    ========================================================================== */
 
 .form-page {
+  max-width: 780px;
   width: 100%;
+  margin: 0 auto;
   box-sizing: border-box;
 }
 
-.form-page h1 {
+.form-page .back-link {
+  display: inline-block;
   font-family: var(--font-sans);
-  font-size: 1.85rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--text);
-  margin: 0 0 1.5rem 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--btn-card-text);
+  background: var(--btn-card-bg);
+  border: 1px solid var(--btn-card-border);
+  border-radius: 9999px;
+  padding: 0.35rem 0.95rem;
+  text-decoration: none;
+  margin-bottom: 1.25rem;
+  transition: all 0.2s ease;
 }
 
+.form-page .back-link:hover {
+  background: var(--btn-card-hover-bg);
+  color: var(--accent);
+  transform: translateX(-2px);
+}
+
+.form-page h1 {
+  font-family: var(--font-serif);
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin: 0 0 1.75rem 0;
+  line-height: 1.2;
+}
+
+/* Kicker above Title */
+.form-page h1::before {
+  content: '\2022  LIBRARY CATALOG';
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--kicker-color);
+  margin-bottom: 0.35rem;
+}
+
+/* Subtitle below Title */
+.form-page h1::after {
+  content: 'Fill in the book details to expand your personal collection and reading tracker.';
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+/* Pure White Form Card */
 .form-card {
   display: grid;
-  gap: 1.4rem;
-  padding: 2.25rem;
-  background: var(--card-brown);
+  gap: 1.35rem;
+  padding: 2.75rem 3rem;
+  background: var(--card-bg);
   border: 1px solid var(--card-brown-border);
-  border-radius: 18px;
-  box-shadow: 0 8px 30px var(--shadow-lg);
+  border-radius: 24px;
+  box-shadow: var(--card-shadow);
   box-sizing: border-box;
   color: var(--card-text);
 }
 
 .form-group {
   display: grid;
-  gap: 0.5rem;
+  gap: 0.45rem;
 }
 
 .form-group label {
   font-family: var(--font-sans);
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--card-text);
-  letter-spacing: 0.01em;
+}
+
+/* Required tag on Title label */
+.form-group label[for='title']::after {
+  content: 'Required';
+  float: right;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--kicker-color);
+  background: var(--accent-light);
+  padding: 0.15rem 0.6rem;
+  border-radius: 9999px;
 }
 
 .form-group input[type='text'],
@@ -48,16 +109,22 @@
 .form-group select {
   width: 100%;
   box-sizing: border-box;
-  padding: 0.75rem 1rem;
-  border: 1.5px solid var(--input-border);
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--input-border);
   border-radius: 10px;
   background: var(--input-bg);
   color: var(--input-text);
   font-family: var(--font-sans);
-  font-size: 0.95rem;
+  font-size: 0.9375rem;
   line-height: 1.5;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-  box-shadow: 0 1px 3px var(--shadow-sm);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: none;
+}
+
+.form-group input[type='text']::placeholder,
+.form-group input[type='number']::placeholder,
+.form-group textarea::placeholder {
+  color: var(--input-placeholder);
 }
 
 .form-group input[type='text']:hover,
@@ -72,57 +139,48 @@
 .form-group select:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--primary-focus), 0 2px 8px var(--shadow-sm);
+  box-shadow: 0 0 0 3px var(--primary-focus);
 }
 
-/* Polished File Input on Warm Beige Card */
+/* Poster Input with Dark Charcoal Choose File Button */
 .form-group input[type='file'] {
   width: 100%;
   box-sizing: border-box;
-  padding: 0.65rem 0.85rem;
-  border: 2px dashed var(--input-border);
-  border-radius: 10px;
+  padding: 1.15rem 1.35rem;
+  border: 1px solid var(--input-border);
+  border-radius: 12px;
   background: var(--file-input-bg);
   color: var(--card-text-muted);
   font-family: var(--font-sans);
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   cursor: pointer;
-  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease;
 }
 
 .form-group input[type='file']:hover {
   border-color: var(--accent);
-  background: var(--file-input-hover-bg);
-}
-
-.form-group input[type='file']:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--primary-focus);
 }
 
 .form-group input[type='file']::file-selector-button {
-  padding: 0.5rem 1.1rem;
-  border-radius: 8px;
-  border: 1px solid var(--primary-dark);
-  background: linear-gradient(135deg, var(--btn-primary-bg-start) 0%, var(--btn-primary-bg-end) 100%);
-  color: var(--btn-primary-text);
+  padding: 0.55rem 1.35rem;
+  border-radius: 9999px;
+  border: none;
+  background: var(--file-btn-bg);
+  color: var(--file-btn-text);
   font-family: var(--font-sans);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   cursor: pointer;
-  margin-right: 0.85rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-  box-shadow: 0 2px 8px var(--shadow-sm);
+  float: right;
+  margin-top: -0.15rem;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .form-group input[type='file']::file-selector-button:hover {
+  background: var(--file-btn-hover);
   transform: translateY(-1px);
-  filter: brightness(1.1);
-  box-shadow: 0 4px 12px var(--shadow-md);
 }
 
-/* Select element and option styling */
 .form-group select {
   cursor: pointer;
 }
@@ -147,7 +205,7 @@
 .form-error {
   color: var(--danger);
   font-family: var(--font-sans);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -157,33 +215,62 @@
 
 .form-error::before {
   content: '⚠';
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
 }
 
+/* Actions matching Image 4: Right aligned, Cancel first, Save Book second */
 .form-actions {
   display: flex;
+  justify-content: flex-end;
   align-items: center;
-  gap: 0.85rem;
-  margin-top: 0.85rem;
-  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.form-actions .btn:not(.btn-primary) {
+  order: 1;
+  background: var(--btn-card-bg);
+  border: none;
+  color: var(--btn-card-text);
+  border-radius: 9999px;
+  padding: 0.65rem 1.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: none;
+}
+
+.form-actions .btn:not(.btn-primary):hover {
+  background: var(--btn-card-hover-bg);
+  transform: translateY(-1px);
 }
 
 .form-actions .btn-primary {
-  background: linear-gradient(135deg, var(--btn-primary-bg-start) 0%, var(--btn-primary-bg-end) 100%);
-  border: 1px solid var(--primary-dark);
-  color: var(--btn-primary-text);
+  order: 2;
+  background: var(--primary);
+  border: none;
+  color: var(--text-inverse);
+  border-radius: 9999px;
+  padding: 0.65rem 1.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
   box-shadow: 0 4px 14px var(--primary-glow);
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .form-actions .btn-primary:hover {
-  background: linear-gradient(135deg, var(--btn-primary-hover-start) 0%, var(--btn-primary-hover-end) 100%);
-  border-color: var(--primary-hover);
-  color: var(--text-inverse);
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px var(--primary-glow);
 }
 
 @media (max-width: 600px) {
   .form-card {
-    padding: 1.35rem 1.15rem;
+    padding: 1.75rem 1.25rem;
   }
 
   .form-row {
@@ -196,7 +283,9 @@
     align-items: stretch;
   }
 
-  .form-actions .btn {
+  .form-actions .btn,
+  .form-actions .btn-primary {
     width: 100%;
+    justify-content: center;
   }
 }

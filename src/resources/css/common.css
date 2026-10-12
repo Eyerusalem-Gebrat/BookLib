@@ -1,141 +1,179 @@
 /* ==========================================================================
    BookLib - Common Styles & CSS Custom Properties
-   Theme: Warm Earthy Light Brown Cards & Header, Beige Canvas
+   Editorial Aesthetic: Warm Cream/Peach Canvas, Pure White Cards,
+   Terracotta Sienna Accents & Editorial Serif Typography
    ========================================================================== */
 
 :root,
 .dark {
-  /* System Font Stack */
+  /* System Font Stacks */
+  --font-serif: Georgia, 'Times New Roman', Cambria, Garamond, serif;
   --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
-  /* 1. Header: Warm Earthy Light Brown */
-  --header-bg: #d5b396;
-  --header-bg-glass: rgba(186, 143, 106, 0.94);
-  --header-border: #a47752;
-  --header-text: #1a1007;
-  --header-text-muted: #4d331e;
-  --header-pill-bg: #c9a380;
-  --header-pill-border: #a47752;
+  /* 1. Header */
+  --header-bg: #faf0e6;
+  --header-bg-glass: rgba(250, 240, 230, 0.94);
+  --header-border: #f0e2d3;
+  --header-text: #1f160f;
+  --header-text-muted: #766355;
+  --header-logo-color: #8d3b0d;
+  --header-pill-bg: #f7eae0;
+  --header-pill-border: #eedccd;
+  --welcome-header-bg: #ffffff;
+  --welcome-header-border: rgba(230, 210, 195, 0.6);
 
-  /* 2. Page Canvas (Below the header): Beige */
-  --page-bg-color: #fff8eb;
-  --page-bg: linear-gradient(180deg, #f2eadc 0%, #ede4d4 38%, #e5dbc9 100%);
-  --surface-alt: #dfd3be;
+  /* 2. Page Canvas (Below the header): Warm Cream/Peach Canvas */
+  --page-bg-color: #faf4ed;
+  --page-bg: radial-gradient(circle at 18% 15%, rgba(255, 235, 218, 0.7) 0%, transparent 45%),
+             radial-gradient(circle at 82% 20%, rgba(254, 230, 210, 0.6) 0%, transparent 45%),
+             linear-gradient(180deg, #fbf6ef 0%, #faf2e9 40%, #f6ece0 100%);
+  --surface-alt: #fbeee3;
 
-  /* 3. Cards: Warm Earthy Light Brown */
-  --card-brown: #cba889;
-  --card-brown-hover: #c29772;
-  --card-brown-border: #a47752;
-  --card-brown-glow: rgba(124, 52, 22, 0.18);
-  --card-text: #1a1007;
-  --card-text-muted: #4d331e;
-  --card-text-dim: #6b4d32;
+  /* 3. Cards & Panels: Pure White (#ffffff) in all images */
+  --card-bg: #ffffff;
+  --card-brown: #ffffff;
+  --card-brown-hover: #ffffff;
+  --card-brown-border: #f2e7dc;
+  --card-brown-glow: rgba(141, 59, 13, 0.12);
+  --card-text: #1f160f;
+  --card-text-muted: #766355;
+  --card-text-dim: #9e8c7f;
+  --card-shadow: 0 10px 32px rgba(160, 110, 70, 0.08);
+  --card-shadow-hover: 0 14px 40px rgba(160, 110, 70, 0.12);
 
   /* Surfaces & Defaults */
-  --surface: var(--card-brown);
-  --surface-inset: #f8f2e7;
+  --surface: var(--card-bg);
+  --surface-inset: #fcf3ec;
   --border: var(--card-brown-border);
-  --border-hover: #7c3416;
-  --border-accent: #a47752;
-  --border-poster: #8e623f;
-  --text: #1a1007;
-  --text-muted: #573c24;
+  --border-hover: #8d3b0d;
+  --border-accent: #f2e7dc;
+  --border-poster: #f2dbcb;
+  --text: #1f160f;
+  --text-muted: #766355;
   --text-inverse: #ffffff;
   --text-dark-btn: #ffffff;
   --text-dark-btn-hover: #ffffff;
 
-  /* Accent & Terracotta / Rust Highlights */
-  --accent: #7c3416;
-  --accent-hover: #682a0f;
-  --accent-light: #f5ebe1;
-  --accent-secondary: #9c4c23;
-  --accent-glow: rgba(124, 52, 22, 0.28);
+  /* Accent & Terracotta Highlights */
+  --accent: #8d3b0d;
+  --accent-hover: #783009;
+  --accent-light: #fbebe1;
+  --accent-secondary: #a34e20;
+  --accent-glow: rgba(141, 59, 13, 0.22);
+  --kicker-color: #9e4416;
 
-  /* Primary Button Tokens (Rich Terracotta Sienna) */
-  --primary: #7c3416;
-  --primary-hover: #682a0f;
-  --primary-dark: #52200a;
-  --primary-glow: rgba(124, 52, 22, 0.32);
-  --primary-focus: rgba(124, 52, 22, 0.38);
+  /* Primary Button Tokens (Deep Rich Terracotta #8d3b0d) */
+  --primary: #8d3b0d;
+  --primary-hover: #783009;
+  --primary-dark: #662705;
+  --primary-glow: rgba(141, 59, 13, 0.25);
+  --primary-focus: rgba(141, 59, 13, 0.35);
 
-  --btn-primary-bg-start: #7c3416;
-  --btn-primary-bg-end: #65280e;
-  --btn-primary-hover-start: #8e3d1c;
-  --btn-primary-hover-end: #742e12;
-  --btn-primary-text: #fffdf9;
+  --btn-primary-bg-start: #8d3b0d;
+  --btn-primary-bg-end: #853609;
+  --btn-primary-hover-start: #783009;
+  --btn-primary-hover-end: #6e2c07;
+  --btn-primary-text: #ffffff;
 
-  /* Secondary / Card Buttons (Soft Beige/Sand on warm earthy brown) */
-  --btn-card-bg: #dfd1be;
-  --btn-card-border: #a47752;
-  --btn-card-text: #1a1007;
-  --btn-card-hover-bg: #d4c4ae;
+  /* Secondary / Card Buttons (Soft Peach Pill #fbece3) */
+  --btn-card-bg: #fbece3;
+  --btn-card-border: #f3dfd1;
+  --btn-card-text: #2b1911;
+  --btn-card-hover-bg: #f5e1d5;
+  --btn-card-hover-text: #1a0f0a;
 
   /* State & Alert Colors */
   --success: #225232;
   --success-dark: #163b22;
   --warning: #874706;
   --warning-dark: #6e3704;
-  --danger: #9e2a1e;
-  --danger-hover: #861f14;
-  --danger-bg: #f5e2de;
-  --danger-border: #e8bdb5;
-  --danger-glow: rgba(158, 42, 30, 0.22);
+  --danger: #b9382e;
+  --danger-hover: #a32d24;
+  --danger-bg: #fdeceb;
+  --danger-border: #f8cfcb;
+  --danger-glow: rgba(185, 56, 46, 0.15);
 
   /* Status Badges */
-  --status-want-bg: #dfd7ce;
-  --status-want-text: #382f25;
-  --status-want-border: #c4baa9;
-  --status-want-glow: rgba(56, 47, 37, 0.15);
+  --status-want-bg: #fbebe1;
+  --status-want-text: #9e4416;
+  --status-want-border: #f5d8c6;
+  --status-want-glow: rgba(158, 68, 22, 0.15);
 
-  --status-reading-bg: #fdecc8;
-  --status-reading-text: #7c3e06;
-  --status-reading-border: #f0ce84;
-  --status-reading-glow: rgba(201, 106, 8, 0.2);
+  --status-reading-bg: #fef3c7;
+  --status-reading-text: #92400e;
+  --status-reading-border: #fde68a;
+  --status-reading-glow: rgba(217, 119, 6, 0.15);
 
-  --status-finished-bg: #d9e8d4;
-  --status-finished-text: #1e462b;
-  --status-finished-border: #b5d3ad;
-  --status-finished-glow: rgba(30, 70, 43, 0.2);
+  --status-finished-bg: #e3ede2;
+  --status-finished-text: #234e38;
+  --status-finished-border: #c6dec5;
+  --status-finished-glow: rgba(35, 78, 56, 0.15);
 
-  /* Progress Bar */
-  --progress-track: #dfd1be;
-  --progress-fill-start: #8e3d1c;
-  --progress-fill-mid: #7c3416;
-  --progress-fill-end: #65280e;
+  /* Progress Bar (Terracotta fill on soft cream track) */
+  --progress-track: #eeddd0;
+  --progress-fill-start: #94380d;
+  --progress-fill-mid: #8d3b0d;
+  --progress-fill-end: #7c3108;
 
-  /* Inputs on Warm Earthy Brown Cards (Soft Cream Inset) */
-  --input-bg: #f8f2e7;
-  --input-border: #a47752;
-  --input-text: #1a1007;
-  --select-option-bg: #f8f2e7;
-  --select-option-color: #1a1007;
+  /* Inputs & Insets (Soft Peach/Cream Inset #fcf3ec) */
+  --input-bg: #fcf3ec;
+  --input-border: #f4e6d8;
+  --input-text: #1f160f;
+  --input-placeholder: #a59284;
+  --select-option-bg: #ffffff;
+  --select-option-color: #1f160f;
 
   /* Empty poster placeholder tokens */
-  --empty-poster-bg: #c9a380;
-  --empty-poster-border: #9b704d;
-  --empty-poster-text: #4d331e;
+  --empty-poster-bg: #fbece2;
+  --empty-poster-border: #f2dbcb;
+  --empty-poster-text: #7d614e;
 
-  /* File input tokens */
-  --file-input-bg: #c9a380;
-  --file-input-hover-bg: #be9774;
+  /* File input tokens (Dark Charcoal "Choose File" Button in images!) */
+  --file-input-bg: #fcf3ec;
+  --file-input-hover-bg: #f7ebe1;
+  --file-btn-bg: #2c2623;
+  --file-btn-hover: #1f1b18;
+  --file-btn-text: #ffffff;
 
   /* Shadows */
-  --shadow-sm: rgba(45, 28, 14, 0.08);
-  --shadow-md: rgba(45, 28, 14, 0.14);
-  --shadow-lg: rgba(45, 28, 14, 0.22);
-  --shadow-xl: rgba(45, 28, 14, 0.32);
-  --shadow-poster: rgba(40, 24, 10, 0.28);
-  --shadow-poster-hover: rgba(40, 24, 10, 0.42);
+  --shadow-sm: rgba(160, 110, 70, 0.05);
+  --shadow-md: rgba(160, 110, 70, 0.08);
+  --shadow-lg: rgba(160, 110, 70, 0.12);
+  --shadow-xl: rgba(160, 110, 70, 0.18);
+  --shadow-poster: rgba(140, 90, 50, 0.12);
+  --shadow-poster-hover: rgba(140, 90, 50, 0.18);
 
   /* Ambient Welcome Blobs */
-  --blob-1: rgba(201, 163, 128, 0.45);
-  --blob-2: rgba(223, 209, 190, 0.6);
-  --blob-3: rgba(186, 143, 106, 0.35);
+  --blob-1: rgba(255, 235, 218, 0.7);
+  --blob-2: rgba(254, 230, 210, 0.6);
+  --blob-3: rgba(250, 220, 195, 0.5);
 
   /* Editorial Hero Gradient */
-  --hero-gradient-1: #1a1007;
-  --hero-gradient-2: #52200a;
-  --hero-gradient-3: #7c3416;
+  --hero-gradient-1: #1f160f;
+  --hero-gradient-2: #4a2310;
+  --hero-gradient-3: #8d3b0d;
+
+  /* Additional Design Tokens for Exact Match */
+  --user-status-dot: #2f855a;
+  --footer-bg: #faf0e6;
+  --footer-border: #f0e2d3;
+  --footer-text: #766355;
+  --footer-logo: #8d3b0d;
+  --badge-number-bg: #fbebe1;
+  --badge-number-text: #9e4416;
+  --badge-icon-bg: #fbece2;
+  --badge-icon-text: #9e4416;
+  --badge-icon-green-bg: #e3ede2;
+  --badge-icon-green-text: #234e38;
+  --welcome-banner-bg: #fcf1e7;
+  --welcome-banner-border: #f3dfd1;
+  --welcome-card-shadow: 0 10px 32px rgba(160, 110, 70, 0.08);
+  --welcome-header-shadow: 0 4px 20px rgba(160, 110, 70, 0.08);
+  --auth-card-shadow: 0 20px 60px rgba(160, 110, 70, 0.12);
+  --auth-badge-bg: #9e4416;
+  --auth-badge-text: #ffffff;
+  --divider-color: #eedccd;
+  --star-color: #9e4416;
 
   /* Root Document Default Background */
   background-color: var(--page-bg-color);
@@ -180,7 +218,7 @@ body {
   font-size: 0.9375rem;
   font-weight: 600;
   line-height: 1.4;
-  padding: 0.55rem 1.25rem;
+  padding: 0.55rem 1.4rem;
   border-radius: 9999px;
   border: 1px solid var(--btn-card-border);
   background: var(--btn-card-bg);
@@ -190,17 +228,17 @@ body {
   white-space: nowrap;
   user-select: none;
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    background 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    color 0.2s ease;
+              background 0.2s ease,
+              border-color 0.2s ease,
+              box-shadow 0.2s ease,
+              color 0.2s ease;
   box-shadow: 0 1px 3px var(--shadow-sm);
 }
 
 .btn:hover {
   background: var(--btn-card-hover-bg);
-  border-color: var(--border-hover);
-  color: var(--card-text);
+  border-color: var(--btn-card-border);
+  color: var(--btn-card-hover-text);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px var(--shadow-md);
 }
@@ -287,23 +325,27 @@ body {
   gap: 0.4rem;
   margin-bottom: 1.25rem;
   font-family: var(--font-sans);
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-weight: 600;
-  color: var(--card-text-muted);
+  color: var(--card-text);
+  background: var(--btn-card-bg);
+  padding: 0.35rem 0.95rem;
+  border-radius: 9999px;
   text-decoration: none;
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition: all 0.2s ease;
+  width: fit-content;
 }
 
 .back-link:hover {
   color: var(--accent);
-  transform: translateX(-3px);
-  text-decoration: none;
+  background: var(--btn-card-hover-bg);
+  transform: translateX(-2px);
 }
 
 .back-link:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 9999px;
 }
 
 .book-meta {
@@ -325,19 +367,29 @@ body {
 /* Empty Poster Placeholder */
 .book-poster-empty {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   background: var(--empty-poster-bg);
-  border: 2px dashed var(--empty-poster-border);
+  border: 1px solid var(--empty-poster-border);
+  border-radius: 12px;
   color: var(--empty-poster-text);
   font-family: var(--font-sans);
-  font-size: 0.875rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   padding: 0.75rem;
   box-sizing: border-box;
   user-select: none;
+  text-transform: uppercase;
+}
+
+.book-poster-empty::before {
+  content: '📖';
+  font-size: 1.75rem;
+  margin-bottom: 0.4rem;
+  opacity: 0.85;
 }
 
 /* ==========================================================================
@@ -348,13 +400,13 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  margin: 0.45rem 0;
-  padding: 0.25rem 0.75rem;
+  margin: 0.35rem 0;
+  padding: 0.25rem 0.8rem;
   border-radius: 9999px;
   font-family: var(--font-sans);
   font-size: 0.8125rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   border: 1px solid transparent;
   transition: all 0.2s ease;
   width: fit-content;
@@ -395,11 +447,11 @@ body {
    ========================================================================== */
 
 .progress-bar {
-  height: 10px;
+  height: 8px;
   border-radius: 9999px;
   background: var(--progress-track);
   overflow: hidden;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
   margin-top: 0.4rem;
 }
 

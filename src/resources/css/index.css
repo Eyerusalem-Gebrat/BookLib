@@ -1,7 +1,7 @@
 /* ==========================================================================
    BookLib - Books Index Page
-   Cards: Warm Earthy Light Brown
-   Canvas: Beige
+   Editorial Aesthetic: Pure Crisp White Cards in 2-Column Grid,
+   Terracotta Accents, Editorial Serif Headlines
    ========================================================================== */
 
 .books-page {
@@ -11,20 +11,62 @@
 
 .books-header {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: 1.25rem;
+  margin-bottom: 2.25rem;
   flex-wrap: wrap;
 }
 
 .books-header h1 {
-  font-family: var(--font-sans);
-  font-size: 1.85rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-family: var(--font-serif);
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   color: var(--text);
   margin: 0;
+  line-height: 1.2;
+}
+
+/* Kicker above My Reading List */
+.books-header h1::before {
+  content: '\2022  PERSONAL LIBRARY';
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--kicker-color);
+  margin-bottom: 0.35rem;
+}
+
+/* Terracotta + Add Book Pill */
+.books-header .btn-primary {
+  background: var(--primary);
+  border: none;
+  color: var(--text-inverse);
+  border-radius: 9999px;
+  padding: 0.6rem 1.6rem;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  box-shadow: 0 4px 14px var(--primary-glow);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.books-header .btn-primary::before {
+  content: '+ ';
+  font-size: 1.15em;
+  font-weight: 700;
+}
+
+.books-header .btn-primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px var(--primary-glow);
 }
 
 .flash-success {
@@ -43,38 +85,24 @@
   box-shadow: 0 4px 16px var(--status-finished-glow);
 }
 
-.flash-success::before {
-  content: '✓';
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--status-finished-text);
-  color: var(--text-inverse);
-  font-size: 0.8125rem;
-  font-weight: 800;
-}
-
 .empty-message {
-  padding: 4.5rem 2rem;
+  padding: 5rem 2rem;
   text-align: center;
   color: var(--text-muted);
   font-family: var(--font-sans);
   font-size: 1.05rem;
-  background: var(--card-brown);
-  border: 2px dashed var(--border-accent);
-  border-radius: 16px;
-  box-shadow: 0 4px 16px var(--shadow-sm);
+  background: var(--card-bg);
+  border: 2px dashed var(--border);
+  border-radius: 20px;
+  box-shadow: var(--card-shadow);
   margin: 1.5rem 0;
 }
 
-/* 2-Column Grid of Brown Book Cards */
+/* 2-Column Grid of Crisp White Cards */
 .book-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.25rem;
+  gap: 1.75rem;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -82,12 +110,12 @@
 
 .book-card {
   display: flex;
-  gap: 1.15rem;
-  padding: 1.25rem 1.15rem;
-  background: var(--card-brown);
+  gap: 1.25rem;
+  padding: 1.25rem;
+  background: var(--card-bg);
   border: 1px solid var(--card-brown-border);
-  border-radius: 16px;
-  box-shadow: 0 4px 18px var(--shadow-md);
+  border-radius: 20px;
+  box-shadow: var(--card-shadow);
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
               box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
               border-color 0.25s ease;
@@ -99,27 +127,58 @@
 }
 
 .book-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-3px);
   border-color: var(--accent);
-  box-shadow: 0 10px 28px var(--shadow-lg), 0 0 16px var(--card-brown-glow);
+  box-shadow: var(--card-shadow-hover);
 }
 
-/* Half-Sized Poster on Brown Card */
+/* Book Poster */
 .book-poster {
-  width: 90px;
-  height: 135px;
+  width: 175px;
+  min-width: 175px;
+  height: 235px;
   flex-shrink: 0;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 12px;
   border: 1px solid var(--border-poster);
   box-shadow: 0 4px 14px var(--shadow-poster);
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.25s ease;
 }
 
 .book-card:hover .book-poster {
-  transform: scale(1.03) rotate(-1deg);
-  box-shadow: 0 8px 22px var(--shadow-poster-hover);
+  transform: scale(1.02);
+}
+
+/* Empty Poster Placeholder matching Image 2 */
+.book-poster-empty {
+  width: 175px;
+  min-width: 175px;
+  height: 235px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: var(--empty-poster-bg);
+  border: none;
+  border-radius: 12px;
+  color: var(--empty-poster-text);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 1rem;
+  box-sizing: border-box;
+  user-select: none;
+  text-transform: uppercase;
+}
+
+.book-poster-empty::before {
+  content: '📖';
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.85;
 }
 
 .book-info {
@@ -127,15 +186,17 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .book-info h2 {
-  font-family: var(--font-sans);
-  font-size: 1.15rem;
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
   font-weight: 700;
   letter-spacing: -0.01em;
   margin: 0 0 0.25rem 0;
-  line-height: 1.3;
+  line-height: 1.25;
+  padding-right: 7.5rem;
 }
 
 .book-info h2 a {
@@ -146,59 +207,155 @@
 
 .book-info h2 a:hover {
   color: var(--accent);
-  text-decoration: none;
 }
 
-.book-info h2 a:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-.book-description {
-  margin: 0.45rem 0;
+.book-info .book-meta {
   font-family: var(--font-sans);
   font-size: 0.875rem;
-  line-height: 1.5;
   color: var(--card-text-muted);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  margin: 0 0 0.4rem 0;
+  line-height: 1.4;
 }
 
+/* Genre Tag as Peach Pill */
+.book-info .book-meta:nth-of-type(2) {
+  display: inline-block;
+  background: var(--accent-light);
+  color: var(--card-text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  width: fit-content;
+  margin: 0.15rem 0 0.5rem 0;
+}
+
+/* Status Badge Top-Right */
+.book-info .status-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+}
+
+/* Inset Progress Box */
+.book-info .progress {
+  background: var(--surface-inset);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin: 0.5rem 0;
+  box-sizing: border-box;
+}
+
+.book-info .progress::before {
+  content: 'Progress';
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--card-text);
+  margin-bottom: 0.4rem;
+}
+
+.book-info .progress-bar {
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--progress-track);
+  overflow: hidden;
+  margin-bottom: 0.4rem;
+  box-shadow: none;
+}
+
+.book-info .progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+  background: var(--primary);
+  box-shadow: none;
+}
+
+.book-info .progress-text {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--card-text-muted);
+  margin: 0;
+}
+
+/* Description preview as soft peach container */
+.book-description {
+  background: var(--surface-inset);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--card-text-muted);
+  margin: 0.4rem 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Card Actions */
 .book-card .book-actions {
-  margin-top: 0.75rem;
-  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
 }
 
 .book-card .book-actions .btn {
-  padding: 0.4rem 0.85rem;
-  font-size: 0.875rem;
   background: var(--btn-card-bg);
-  border-color: var(--btn-card-border);
+  border: none;
   color: var(--btn-card-text);
+  border-radius: 9999px;
+  padding: 0.4rem 1.15rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+  box-shadow: none;
+}
+
+.book-card .book-actions .btn::before {
+  content: '✏️ ';
+  font-size: 0.85em;
 }
 
 .book-card .book-actions .btn:hover {
   background: var(--btn-card-hover-bg);
-  border-color: var(--accent);
-  color: var(--text);
+  transform: translateY(-1px);
 }
 
 .book-card .book-actions .btn-danger {
   background: var(--danger-bg);
-  border-color: var(--danger-border);
+  border: none;
   color: var(--danger);
+  border-radius: 9999px;
+  padding: 0.4rem 1.15rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: none;
+}
+
+.book-card .book-actions .btn-danger::before {
+  content: '🗑️ ';
+  font-size: 0.85em;
 }
 
 .book-card .book-actions .btn-danger:hover {
-  background: var(--danger-hover);
-  border-color: var(--danger-hover);
-  color: var(--text-inverse);
+  background: var(--danger-border);
+  color: var(--danger-hover);
+  transform: translateY(-1px);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 960px) {
   .book-list {
     grid-template-columns: 1fr;
   }
@@ -212,35 +369,48 @@
   }
 
   .books-header h1 {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
 
-  .books-header .btn {
+  .books-header .btn-primary {
     width: 100%;
+    justify-content: center;
   }
 
   .book-card {
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    gap: 1rem;
-    padding: 1.25rem;
+    text-align: left;
+    padding: 1rem;
   }
 
-  .book-poster {
-    width: 110px;
-    height: 165px;
+  .book-poster,
+  .book-poster-empty {
+    width: 140px;
+    min-width: 140px;
+    height: 190px;
   }
 
   .book-info {
     width: 100%;
   }
 
-  .book-actions {
-    width: 100%;
+  .book-info h2 {
+    padding-right: 0;
   }
 
-  .book-actions .btn {
+  .book-info .status-badge {
+    position: static;
+    margin-bottom: 0.5rem;
+  }
+
+  .book-card .book-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .book-card .book-actions .btn {
     flex: 1;
+    justify-content: center;
   }
 }

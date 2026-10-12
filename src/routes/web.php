@@ -14,7 +14,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // N+1 demo: shows the number of queries before and after the fix
     Route::get('demo/n-plus-one', function () {
         // BAD: 1 query for the books, then 1 more query per book to load its user
-        DB::flushQueryLog();
+        DB::flushQueryLog(); // Clears the currently recorded entries in the log
         DB::enableQueryLog();
         $books = Book::all();
         foreach ($books as $book) {
@@ -24,7 +24,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // GOOD: eager loading, only 2 queries in total
         DB::flushQueryLog();
-        $books = Book::with('user')->get();
+        $books = Book::with('user')->get(); // loads the user relationships along with the books
         foreach ($books as $book) {
             $book->user->name;
         }
@@ -38,6 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('demo.n-plus-one');
 
     // Only logged-in users can access the books.
+    // generates the conventional routes for managing books
     Route::resource('books', BookController::class);
 });
 

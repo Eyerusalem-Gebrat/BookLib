@@ -1,41 +1,95 @@
 /* ==========================================================================
    BookLib - Book Detail Show Page
-   Card: Warm Earthy Light Brown
+   Editorial Aesthetic: Pure Crisp White Detail Card,
+   Terracotta Accents, Inset Progress & Description
    ========================================================================== */
 
 .show-page {
+  max-width: 960px;
   width: 100%;
+  margin: 0 auto;
   box-sizing: border-box;
+}
+
+.show-page .back-link {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--btn-card-text);
+  background: var(--btn-card-bg);
+  border: 1px solid var(--btn-card-border);
+  border-radius: 9999px;
+  padding: 0.35rem 0.95rem;
+  text-decoration: none;
+  margin-bottom: 1.25rem;
+  transition: all 0.2s ease;
+}
+
+.show-page .back-link:hover {
+  background: var(--btn-card-hover-bg);
+  color: var(--accent);
+  transform: translateX(-2px);
 }
 
 .show-layout {
   display: flex;
-  gap: 2.25rem;
-  padding: 2.25rem;
-  background: var(--card-brown);
+  gap: 2.5rem;
+  padding: 2.5rem;
+  background: var(--card-bg);
   border: 1px solid var(--card-brown-border);
-  border-radius: 18px;
-  box-shadow: 0 8px 30px var(--shadow-lg);
+  border-radius: 24px;
+  box-shadow: var(--card-shadow);
   position: relative;
   overflow: hidden;
   color: var(--card-text);
+  box-sizing: border-box;
 }
 
 .show-poster {
-  width: 220px;
-  height: 330px;
+  width: 240px;
+  min-width: 240px;
+  height: 340px;
   flex-shrink: 0;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 14px;
   border: 1px solid var(--border-poster);
   box-shadow: 0 6px 20px var(--shadow-poster);
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.25s ease;
 }
 
 .show-poster:hover {
   transform: scale(1.02);
-  box-shadow: 0 10px 28px var(--shadow-poster-hover);
+}
+
+.show-poster.book-poster-empty {
+  width: 240px;
+  min-width: 240px;
+  height: 340px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: var(--empty-poster-bg);
+  border: none;
+  border-radius: 14px;
+  color: var(--empty-poster-text);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  text-transform: uppercase;
+}
+
+.show-poster.book-poster-empty::before {
+  content: '📖';
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+  opacity: 0.85;
 }
 
 .show-info {
@@ -46,24 +100,81 @@
 }
 
 .show-info h1 {
-  font-family: var(--font-sans);
-  font-size: 2.1rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-family: var(--font-serif);
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   color: var(--card-text);
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.35rem 0;
   line-height: 1.25;
 }
 
 .show-info .book-meta {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
   color: var(--card-text-muted);
+  margin: 0 0 0.35rem 0;
+}
+
+.show-info .book-meta:nth-of-type(2) {
+  display: inline-block;
+  background: var(--accent-light);
+  color: var(--card-text-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  width: fit-content;
+  margin: 0.2rem 0 0.75rem 0;
+}
+
+.show-info .progress {
+  background: var(--surface-inset);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+  box-sizing: border-box;
+}
+
+.show-info .progress::before {
+  content: 'Progress';
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--card-text);
+  margin-bottom: 0.45rem;
+}
+
+.show-info .progress-bar {
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--progress-track);
+  overflow: hidden;
+  margin-bottom: 0.45rem;
+  box-shadow: none;
+}
+
+.show-info .progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+  background: var(--primary);
+  box-shadow: none;
+}
+
+.show-info .progress-text {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--card-text-muted);
+  margin: 0;
 }
 
 .show-description {
-  margin: 1.25rem 0;
+  margin: 1rem 0;
   font-family: var(--font-sans);
-  font-size: 1rem;
-  line-height: 1.7;
+  font-size: 0.9375rem;
+  line-height: 1.65;
   color: var(--card-text);
   background: var(--surface-inset);
   padding: 1.25rem 1.5rem;
@@ -71,30 +182,77 @@
   border: 1px solid var(--input-border);
 }
 
+.show-info .book-actions {
+  display: flex;
+  gap: 0.85rem;
+  margin-top: auto;
+  padding-top: 1.25rem;
+}
+
 .show-info .book-actions .btn-primary {
-  background: linear-gradient(135deg, var(--btn-primary-bg-start) 0%, var(--btn-primary-bg-end) 100%);
-  border: 1px solid var(--primary-dark);
-  color: var(--btn-primary-text);
+  background: var(--primary);
+  border: none;
+  color: var(--text-inverse);
+  border-radius: 9999px;
+  padding: 0.65rem 1.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
   box-shadow: 0 4px 14px var(--primary-glow);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+
+.show-info .book-actions .btn-primary::before {
+  content: '✏️ ';
+  font-size: 0.9em;
 }
 
 .show-info .book-actions .btn-primary:hover {
-  background: linear-gradient(135deg, var(--btn-primary-hover-start) 0%, var(--btn-primary-hover-end) 100%);
-  border-color: var(--primary-hover);
-  color: var(--text-inverse);
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px var(--primary-glow);
 }
 
-@media (max-width: 700px) {
+.show-info .book-actions .btn-danger {
+  background: var(--danger-bg);
+  border: none;
+  color: var(--danger);
+  border-radius: 9999px;
+  padding: 0.65rem 1.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+
+.show-info .book-actions .btn-danger::before {
+  content: '🗑️ ';
+  font-size: 0.9em;
+}
+
+.show-info .book-actions .btn-danger:hover {
+  background: var(--danger-border);
+  color: var(--danger-hover);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 800px) {
   .show-layout {
     flex-direction: column;
     align-items: center;
-    padding: 1.5rem;
+    padding: 1.75rem 1.5rem;
     gap: 1.5rem;
   }
 
-  .show-poster {
+  .show-poster,
+  .show-poster.book-poster-empty {
     width: 180px;
-    height: 270px;
+    min-width: 180px;
+    height: 250px;
   }
 
   .show-info {
@@ -102,17 +260,6 @@
   }
 
   .show-info h1 {
-    font-size: 1.65rem;
-  }
-}
-
-@media (max-width: 600px) {
-  .show-layout {
-    padding: 1.25rem 1rem;
-  }
-
-  .show-poster {
-    width: 150px;
-    height: 225px;
+    font-size: 1.75rem;
   }
 }

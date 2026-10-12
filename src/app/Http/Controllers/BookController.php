@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -13,9 +11,9 @@ use Illuminate\Support\Facades\Storage;
 class BookController extends Controller
 {
     // Display a listing of the resource.
-    public function index()
+    public function index(Request $request)
     {
-        $user = Auth::user();
+        $user = $request->user();
         $books = $user->books()->latest()->get();
         return inertia('books/index', [
             'books' => $books,
@@ -52,6 +50,7 @@ class BookController extends Controller
         }
 
         // "poster" is a file object, not a database column
+        // removes the poster entry into a database
         unset($validated['poster']);
 
         $request->user()->books()->create($validated);
@@ -64,7 +63,8 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        Gate::authorize('view', $book);
+        // to ask BookPolicy.php whether a user is allowed to perform the action
+        Gate::authorize('view', $book); 
         return inertia('books/show', [
             'book' => $book,
         ]);

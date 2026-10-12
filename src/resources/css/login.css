@@ -1,6 +1,6 @@
 /* ==========================================================================
    BookLib - Login Page Specific Styles
-   Theme: Consistent with Website Theme
+   Editorial Aesthetic: Remember Me Checkbox & Forgot Password Link
    ========================================================================== */
 
 .login-options {
@@ -8,8 +8,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-family: var(--font-sans);
+  width: 100%;
 }
 
 .login-remember {
@@ -19,7 +20,7 @@
   cursor: pointer;
   color: var(--card-text);
   font-family: var(--font-sans);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 500;
   user-select: none;
 }
@@ -27,14 +28,15 @@
 .login-remember input {
   width: 16px;
   height: 16px;
-  accent-color: var(--accent);
+  accent-color: var(--primary);
   cursor: pointer;
   border-radius: 4px;
 }
 
 .login-options .auth-link {
-  color: var(--accent);
-  font-size: 0.875rem;
+  color: var(--kicker-color);
+  font-size: 0.8125rem;
+  font-weight: 500;
 }
 
 .login-options .auth-link:hover {
