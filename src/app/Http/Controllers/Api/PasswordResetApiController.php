@@ -1,0 +1,72 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password as PasswordRule;
+
+class PasswordResetApiController extends Controller
+{
+    // Send a password reset link to the user's email
+    public function forgotPassword(Request $request): JsonResponse
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        Password::sendResetLink(
+            $request->only('email')
+        );
+
+        // Use a generic response to avoid revealing whether
+        // an email address has a registered account.
+        return response()->json([
+            'message' =>
+                'If an account exists for this email, a password reset link will be sent.',
+        ]);
+    }
+
+    // Reset the password using the emailed token
+    public function resetPassword(Request $request): JsonResponse
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'token' => ['required', 'string'],
+            'password' => [
+                'required',
+                'confirmed',
+                PasswordRule::defaults(),
+            ],
+        ]);
+
+        $status = Password::reset(
+            $credentials,
+            function (User $user, string $password) {
+                // The User model's hashed cast hashes the password
+                $user->password = $password;
+                $user->setRememberToken(Str::random(60));
+                $user->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        if ($status !== Password::PASSWORD_RESET) {
+            return response()->json([
+                'message' => __($status),
+            ], 422);
+        }
+
+        return response()->json([
+            'message' => 'Password reset successfully. You can now log in.',
+        ]);
+    }
+}
+

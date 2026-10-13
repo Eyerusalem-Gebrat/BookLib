@@ -2,10 +2,15 @@
 
 use App\Http\Controllers\Api\AuthTokenController;
 use App\Http\Controllers\Api\BookApiController;
+use App\Http\Controllers\Api\PasswordResetApiController;
 use Illuminate\Support\Facades\Route;
 
 // Login endpoint
 Route::post('/login', [AuthTokenController::class, 'store']);
+
+// Password recovery — no login token required
+Route::post('/forgot-password', [PasswordResetApiController::class, 'forgotPassword']);
+Route::post('/reset-password', [PasswordResetApiController::class, 'resetPassword']);
 
 // Everything in this group needs a valid token
 Route::middleware('auth:api')->group(function () { // authenticate requests using passport
