@@ -4,7 +4,10 @@ import 'package:booklib_app/services/api_exception.dart';
 import 'package:booklib_app/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  // A message to show above the form, e.g. "Password reset successfully."
+  final String? notice;
+
+  const LoginScreen({super.key, this.notice});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -44,16 +47,18 @@ class _LoginScreenState extends State<LoginScreen> {
         _passwordController.text,
       );
 
-      if (!mounted) return; // whether the state object is still attached to the widget tree
-      Navigator.of(context).pushReplacement(
+      if (!mounted) return;
+      // Remove every earlier screen (landing, login), so Back can't return to them
+      Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const HomeScreen()),
+        (route) => false,
       );
       return;
     } on ApiException catch (e) {
       error = e.message;
     } catch (e) {
       debugPrint('Login failed: $e');
-      error = 'Could not reach the server.\n$e';
+      error = 'Something unexpected happened. Please try again.';
     }
 
     if (!mounted) return;
@@ -92,6 +97,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 32),
+                    if (widget.notice != null) ...[
+                      const SizedBox(height: 16),
+                      Text(
+                        widget.notice!,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    ],
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,

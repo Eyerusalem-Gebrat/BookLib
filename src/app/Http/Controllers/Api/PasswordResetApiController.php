@@ -54,6 +54,7 @@ class PasswordResetApiController extends Controller
                 $user->password = $password;
                 $user->setRememberToken(Str::random(60));
                 $user->save();
+                $user->tokens()->update(['revoked' => true]);
 
                 event(new PasswordReset($user)); // so other parts can listen the event
             }

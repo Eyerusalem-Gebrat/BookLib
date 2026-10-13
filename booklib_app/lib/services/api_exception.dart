@@ -1,36 +1,69 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-// An error we show to the user (a wrong password, a validation message...)
+// An error we can show to the user (a wrong password, a validation message...)
 class ApiException implements Exception {
   final String message;
   final int? statusCode;
 
-  const ApiException(this.message, {this.statusCode});
+  // Per-field validation messages, e.g. {"title": "The title field is required."}
+  final Map<String, String> fieldErrors;
 
-  // Builds a readable message from a failed Laravel response
+  const ApiException(
+    this.message, {
+    this.statusCode,
+    this.fieldErrors = const {},
+  });
+
+  // True when the token is missing, expired, or revoked
+  bool get isUnauthorized => statusCode == 401;
+
+  // Builds a friendly error from a failed Laravel response
   factory ApiException.fromResponse(http.Response response) {
-    var message = 'Something went wrong (${response.statusCode}).';
+    // The full technical details go to the developer console only
+    debugPrint('API error ${response.statusCode}: ${response.body}');
+
+    String? serverMessage;
+    final fieldErrors = <String, String>{};
 
     try {
-      final body = jsonDecode(response.body) as Map<String, dynamic>;
-
-      // Validation errors: {"errors": {"email": ["The provided credentials are incorrect."]}}
-      final errors = body['errors'];
-      if (errors is Map && errors.isNotEmpty) {
-        final first = errors.values.first;
-        if (first is List && first.isNotEmpty) {
-          message = first.first.toString();
+      final body = jsonDecode(response.body);
+      if (body is Map<String, dynamic>) {
+        final errors = body['errors'];
+        if (errors is Map) {
+          errors.forEach((key, value) {
+            if (value is List && value.isNotEmpty) {
+              fieldErrors[key.toString()] = value.first.toString();
+            }
+          });
         }
-      } else if (body['message'] is String) {
-        // Other errors: {"message": "Unauthenticated."}
-        message = body['message'] as String;
+        if (body['message'] is String) {
+          serverMessage = body['message'] as String;
+        }
       }
     } catch (_) {
-      // The body wasn't JSON: keep the default message
+      // The body wasn't JSON: use the defaults below
     }
 
-    return ApiException(message, statusCode: response.statusCode);
+    final String message;
+    if (fieldErrors.isNotEmpty) {
+      message = fieldErrors.values.first;
+    } else {
+      message = switch (response.statusCode) {
+        403 => 'You are not allowed to do that.',
+        404 => 'That item could not be found. It may have been deleted.',
+        429 => 'Too many attempts. Please wait a moment and try again.',
+        >= 500 => 'The server had a problem. Please try again later.',
+        _ => serverMessage ?? 'Something went wrong (${response.statusCode}).',
+      };
+    }
+
+    return ApiException(
+      message,
+      statusCode: response.statusCode,
+      fieldErrors: fieldErrors,
+    );
   }
 
   @override
