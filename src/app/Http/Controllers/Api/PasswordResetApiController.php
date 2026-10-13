@@ -46,6 +46,7 @@ class PasswordResetApiController extends Controller
             ],
         ]);
 
+        // reset checks the token and email, and if valid, calls the closure to update the password
         $status = Password::reset(
             $credentials,
             function (User $user, string $password) {
@@ -54,7 +55,7 @@ class PasswordResetApiController extends Controller
                 $user->setRememberToken(Str::random(60));
                 $user->save();
 
-                event(new PasswordReset($user));
+                event(new PasswordReset($user)); // so other parts can listen the event
             }
         );
 
