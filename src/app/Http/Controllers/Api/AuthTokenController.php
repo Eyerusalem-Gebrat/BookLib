@@ -33,6 +33,9 @@ class AuthTokenController extends Controller
             ]);
         }
 
+        // Tell the request logger who just logged in (this request had no token yet)
+        $request->attributes->set('log_user_id', $user->id);
+
         // Create a Passport access token
         $token = $user->createToken('mobile')->accessToken;
 

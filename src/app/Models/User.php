@@ -41,6 +41,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Book::class);
     }
 
+    public function requestLogs(): HasMany
+    {
+        return $this->hasMany(RequestLog::class);
+    }
+
     /** @use HasFactory<UserFactory> @use HasApiTokens @use Notifiable */
     // To add the methods and properties of these traits
     use HasApiTokens, HasFactory, Notifiable;
