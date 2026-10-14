@@ -7,7 +7,7 @@ import 'package:booklib_app/screens/password_reset_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:booklib_app/services/poster_picker.dart';
 
-// TEMPORARY: a screen to test the logic. Antigravity will replace it.
+// TEMPORARY: a screen to test the logic. 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
