@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:booklib_app/config/app_theme.dart';
+import 'package:booklib_app/models/book.dart';
+import 'package:booklib_app/screens/book_create_screen.dart';
+import 'package:booklib_app/screens/book_detail_screen.dart';
+import 'package:booklib_app/screens/book_edit_screen.dart';
 import 'package:booklib_app/screens/landing_screen.dart';
 import 'package:booklib_app/services/api_exception.dart';
 import 'package:booklib_app/services/auth_service.dart';
 import 'package:booklib_app/services/book_service.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:booklib_app/services/poster_picker.dart';
 
-// TEMPORARY: a screen to test the logic. 
+/// Screen 1: Real book dashboard / reading list matching index.tsx
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -16,31 +18,50 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _books = BookService();
-  String _output = 'Press a button to test the API.';
-  int? _lastId; // the id of the book we just listed or created
-    String? _posterUrl; // the poster of the last created or updated book
+  final BookService _bookService = BookService();
+  final AuthService _authService = AuthService();
 
-  Future<void> _run(String label, Future<String> Function() action) async {
-    setState(() => _output = '$label...');
+  List<Book>? _books;
+  bool _loading = true;
+  String? _error;
 
-    String result;
-    try {
-      result = await action();
-    } on ApiException catch (e) {
-      // A 401 is handled centrally: SessionManager already sent the user to the start screen
-      if (e.isUnauthorized) return;
-      result = 'ERROR ${e.statusCode}: ${e.message}\nFields: ${e.fieldErrors}';
-    } catch (e) {
-      result = 'ERROR: $e';
-    }
-
-    if (!mounted) return;
-    setState(() => _output = result);
+  @override
+  void initState() {
+    super.initState();
+    _loadBooks();
   }
 
-  Future<void> _goToLogin() async {
-    await AuthService().logout();
+  Future<void> _loadBooks() async {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+
+    try {
+      final list = await _bookService.getBooks();
+      if (!mounted) return;
+      setState(() {
+        _books = list;
+        _loading = false;
+      });
+    } on ApiException catch (e) {
+      if (e.isUnauthorized) return;
+      if (!mounted) return;
+      setState(() {
+        _error = e.message;
+        _loading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _error = 'Failed to load your reading list. Check your connection.';
+        _loading = false;
+      });
+    }
+  }
+
+  Future<void> _logout() async {
+    await _authService.logout();
     if (!mounted) return;
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (_) => const LandingScreen()),
@@ -48,121 +69,98 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<String> _list() async {
-    final books = await _books.getBooks();
-    if (books.isNotEmpty) _lastId = books.first.id;
-
-    if (books.isEmpty) return 'No books yet.';
-    return books
-        .map((b) => '#${b.id} ${b.title} (${b.statusLabel}, ${b.percent}%)')
-        .join('\n');
-  }
-
-  Future<String> _create() async {
-    final book = await _books.createBook(
-      title: 'Test Book ${DateTime.now().millisecondsSinceEpoch % 1000}',
-      author: 'Test Author',
-      genre: 'Fiction',
-      description: 'Created from the app',
-      status: 'reading',
-      totalPages: 300,
-      currentPage: 120,
-    );
-    _lastId = book.id;
-    return 'Created #${book.id} ${book.title} (${book.percent}%)';
-  }
-
-  Future<String> _update() async {
-    final id = _lastId;
-    if (id == null) return 'Press "List" or "Create" first.';
-
-    final book = await _books.updateBook(
-      id,
-      title: 'Edited Book',
-      author: 'Edited Author',
-      status: 'finished', // the server should set current_page = total_pages
-      totalPages: 300,
-      currentPage: 10,
-    );
-    return 'Updated #${book.id}: ${book.statusLabel}, '
-        '${book.currentPage}/${book.totalPages} (${book.percent}%)';
-  }
-
-  Future<String> _missing() async {
-    await _books.getBook(999999);
-    return 'Unexpected: the book was found';
-  }
-
-  // Put the id of a book that belongs to ANOTHER user here
-  static const int _otherUsersBookId = 0;
-
-  Future<String> _forbidden() async {
-    await _books.getBook(_otherUsersBookId);
-    return 'Unexpected: the server let us open it';
-  }
-  Future<String> _createWithPoster() async {
-    final poster = await PosterPicker.pick(ImageSource.gallery);
-    if (poster == null) return 'No image chosen.';
-
-    final book = await _books.createBook(
-      title: 'Poster Book ${DateTime.now().millisecondsSinceEpoch % 1000}',
-      author: 'Test Author',
-      status: 'want_to_read',
-      totalPages: 200,
-      currentPage: 0,
-      poster: poster,
+  Future<void> _openCreate() async {
+    final created = await Navigator.of(context).push<bool?>(
+      MaterialPageRoute(builder: (_) => const BookCreateScreen()),
     );
 
-    _lastId = book.id;
-    if (mounted) setState(() => _posterUrl = book.posterUrl);
-    return 'Created #${book.id} with poster:\n${book.posterUrl}';
+    if (created == true) {
+      _loadBooks();
+    }
   }
 
-  Future<String> _changePoster() async {
-    final id = _lastId;
-    if (id == null) return 'Press "List" or "Create" first.';
-
-    final poster = await PosterPicker.pick(ImageSource.gallery);
-    if (poster == null) return 'No image chosen.';
-
-    // The update needs every required field, so load the current values first
-    final current = await _books.getBook(id);
-
-    final book = await _books.updateBook(
-      id,
-      title: current.title,
-      author: current.author,
-      genre: current.genre,
-      description: current.description,
-      status: current.status,
-      totalPages: current.totalPages,
-      currentPage: current.currentPage,
-      poster: poster,
+  Future<void> _openDetail(Book book) async {
+    final changed = await Navigator.of(context).push<bool?>(
+      MaterialPageRoute(builder: (_) => BookDetailScreen(book: book)),
     );
 
-    if (mounted) setState(() => _posterUrl = book.posterUrl);
-    return 'Updated the poster of #${book.id}:\n${book.posterUrl}';
+    if (changed == true) {
+      _loadBooks();
+    }
   }
 
-  Future<String> _delete() async {
-    final id = _lastId;
-    if (id == null) return 'Press "List" or "Create" first.';
-
-    await _books.deleteBook(id);
-    _lastId = null;
-    return 'Deleted #$id';
-  }
-
-  Future<String> _invalid() async {
-    // An empty title and pages read > total pages: should give validation errors
-    await _books.createBook(
-      title: '',
-      author: 'x',
-      status: 'reading',
-      totalPages: 10,
-      currentPage: 99,
+  Future<void> _openEdit(Book book) async {
+    final updated = await Navigator.of(context).push<Book?>(
+      MaterialPageRoute(builder: (_) => BookEditScreen(book: book)),
     );
-    return 'Unexpected: the server accepted invalid data';
+
+    if (updated != null) {
+      _loadBooks();
+    }
+  }
+
+  Future<void> _confirmDelete(Book book) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppTheme.cardBg,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text(
+          'Delete Book',
+          style: TextStyle(
+            fontFamily: AppTheme.fontSerif,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.text,
+          ),
+        ),
+        content: Text(
+          'Are you sure you want to delete "${book.title}"?',
+          style: const TextStyle(color: AppTheme.textMuted, fontSize: 14),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel', style: TextStyle(color: AppTheme.textMuted)),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            style: FilledButton.styleFrom(
+              backgroundColor: const Color(0xFFB9382E),
+              shape: const StadiumBorder(),
+            ),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    try {
+      await _bookService.deleteBook(book.id);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Deleted "${book.title}"'),
+          backgroundColor: AppTheme.primary,
+        ),
+      );
+      _loadBooks();
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message), backgroundColor: const Color(0xFFB9382E)),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to delete book.'),
+          backgroundColor: Color(0xFFB9382E),
+        ),
+      );
+    }
   }
 
   @override
@@ -173,37 +171,23 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: AppTheme.headerBg,
         elevation: 0,
         scrolledUnderElevation: 0,
-        title: const Row(
-          children: [
-            Text(
-              'BookLib',
-              style: TextStyle(
-                fontFamily: AppTheme.fontSerif,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: AppTheme.headerLogo,
-              ),
-            ),
-            SizedBox(width: 10),
-            Text(
-              '• API TESTER',
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 0.8,
-                color: AppTheme.kicker,
-              ),
-            ),
-          ],
+        title: const Text(
+          'BookLib',
+          style: TextStyle(
+            fontFamily: AppTheme.fontSerif,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.headerLogo,
+          ),
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 14),
+            padding: const EdgeInsets.only(right: 16),
             child: InkWell(
-              onTap: _goToLogin,
+              onTap: _logout,
               borderRadius: BorderRadius.circular(9999),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                 decoration: BoxDecoration(
                   color: AppTheme.btnCardBg,
                   border: Border.all(color: AppTheme.btnCardBorder),
@@ -226,151 +210,463 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Divider(height: 1, color: AppTheme.headerBorder),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppTheme.cardBg,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppTheme.cardBorder),
-                boxShadow: const [AppTheme.cardShadow],
-              ),
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 8,
+      body: RefreshIndicator(
+        onRefresh: _loadBooks,
+        color: AppTheme.primary,
+        backgroundColor: AppTheme.cardBg,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Header Section matching index.tsx
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  FilledButton(
-                    onPressed: () => _run('List', _list),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppTheme.primary,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    ),
-                    child: const Text('List'),
+                  const Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '• PERSONAL LIBRARY',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.8,
+                          color: AppTheme.kicker,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        'My Reading List',
+                        style: TextStyle(
+                          fontFamily: AppTheme.fontSerif,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.text,
+                        ),
+                      ),
+                    ],
                   ),
-                  FilledButton(
-                    onPressed: () => _run('Create', _create),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppTheme.primary,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(9999),
+                      boxShadow: const [AppTheme.primaryGlow],
                     ),
-                    child: const Text('Create'),
-                  ),
-                  FilledButton(
-                    onPressed: () => _run('Update', _update),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppTheme.primary,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    ),
-                    child: const Text('Update'),
-                  ),
-                  FilledButton(
-                    onPressed: () => _run('Delete', _delete),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: const Color(0xFFFDECEB),
-                      foregroundColor: const Color(0xFFB9382E),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    ),
-                    child: const Text('Delete'),
-                  ),
-                  FilledButton.tonal(
-                    onPressed: () => _run('Invalid create', _invalid),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppTheme.btnCardBg,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    ),
-                    child: const Text(
-                      'Invalid data',
-                      style: TextStyle(color: AppTheme.btnCardText),
-                    ),
-                  ),
-                  FilledButton(
-                    onPressed: () => _run('Create with poster', _createWithPoster),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppTheme.primary,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    ),
-                    child: const Text('Create + poster'),
-                  ),
-                  FilledButton(
-                    onPressed: () => _run('Change poster', _changePoster),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppTheme.primary,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    ),
-                    child: const Text('Change poster'),
-                  ),
-                  FilledButton.tonal(
-                    onPressed: () => _run('Missing book', _missing),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppTheme.btnCardBg,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    ),
-                    child: const Text(
-                      'Missing book (404)',
-                      style: TextStyle(color: AppTheme.btnCardText),
-                    ),
-                  ),
-                  FilledButton.tonal(
-                    onPressed: () => _run('Other user book', _forbidden),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppTheme.btnCardBg,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    ),
-                    child: const Text(
-                      "Other user's book (403)",
-                      style: TextStyle(color: AppTheme.btnCardText),
+                    child: FilledButton(
+                      onPressed: _openCreate,
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppTheme.primary,
+                        shape: const StadiumBorder(),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.add, size: 16),
+                          SizedBox(width: 4),
+                          Text('Add Book', style: TextStyle(fontWeight: FontWeight.bold)),
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
+              const SizedBox(height: 24),
+
+              // Content State
+              if (_loading) ...[
+                const SizedBox(height: 80),
+                const Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primary),
+                  ),
+                ),
+                const SizedBox(height: 80),
+              ] else if (_error != null) ...[
+                _buildErrorState(),
+              ] else if (_books == null || _books!.isEmpty) ...[
+                _buildEmptyState(),
+              ] else ...[
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: _books!.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 18),
+                  itemBuilder: (ctx, i) => _buildBookCard(_books![i]),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
+      decoration: BoxDecoration(
+        color: AppTheme.cardBg,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppTheme.cardBorder),
+        boxShadow: const [AppTheme.cardShadow],
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: 60,
+            height: 60,
+            decoration: const BoxDecoration(
+              color: AppTheme.badgeIconBg,
+              shape: BoxShape.circle,
             ),
-            const SizedBox(height: 16),
-            if (_posterUrl != null)
-              Center(
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppTheme.inputBorder),
-                    boxShadow: const [AppTheme.shadowSm],
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: Image.network(
-                    _posterUrl!,
-                    height: 140,
-                    errorBuilder: (_, _, _) => const Padding(
-                      padding: EdgeInsets.all(12),
-                      child: Text('The poster could not be loaded'),
-                    ),
-                  ),
-                ),
+            child: const Center(child: Text('📖', style: TextStyle(fontSize: 26))),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            "You haven't added any books yet.",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: AppTheme.textMuted,
+            ),
+          ),
+          const SizedBox(height: 20),
+          FilledButton(
+            onPressed: _openCreate,
+            style: FilledButton.styleFrom(
+              backgroundColor: AppTheme.primary,
+              shape: const StadiumBorder(),
+            ),
+            child: const Text('Add your first book'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildErrorState() {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: AppTheme.cardBg,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppTheme.cardBorder),
+        boxShadow: const [AppTheme.cardShadow],
+      ),
+      child: Column(
+        children: [
+          const Icon(Icons.cloud_off_rounded, size: 40, color: Color(0xFFB9382E)),
+          const SizedBox(height: 12),
+          Text(
+            _error!,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 13, color: AppTheme.textMuted),
+          ),
+          const SizedBox(height: 16),
+          FilledButton(
+            onPressed: _loadBooks,
+            style: FilledButton.styleFrom(
+              backgroundColor: AppTheme.primary,
+              shape: const StadiumBorder(),
+            ),
+            child: const Text('Try again'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBookCard(Book book) {
+    return InkWell(
+      onTap: () => _openDetail(book),
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppTheme.cardBg,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: AppTheme.cardBorder),
+          boxShadow: const [AppTheme.cardShadow],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Poster Cover
+            Container(
+              width: 100,
+              height: 145,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: const Color(0xFFF2DBCB)),
+                boxShadow: const [AppTheme.shadowSm],
               ),
+              clipBehavior: Clip.antiAlias,
+              child: book.posterUrl != null
+                  ? Image.network(
+                      book.posterUrl!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, _, _) => _buildEmptyPoster(),
+                    )
+                  : _buildEmptyPoster(),
+            ),
+            const SizedBox(width: 16),
+
+            // Info column
             Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: AppTheme.surfaceInset,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppTheme.inputBorder),
-                ),
-                child: SingleChildScrollView(
-                  child: SelectableText(
-                    _output,
-                    style: const TextStyle(
-                      fontFamily: 'monospace',
-                      fontSize: 12,
-                      color: AppTheme.text,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title + Status badge
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          book.title,
+                          style: const TextStyle(
+                            fontFamily: AppTheme.fontSerif,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.text,
+                            height: 1.25,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      _buildStatusBadge(book.status, book.statusLabel),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+
+                  // Author
+                  Text(
+                    'by ${book.author}',
+                    style: const TextStyle(fontSize: 13, color: AppTheme.textMuted),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+
+                  // Genre tag
+                  if (book.genre != null && book.genre!.trim().isNotEmpty) ...[
+                    const SizedBox(height: 6),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: AppTheme.accentLight,
+                        borderRadius: BorderRadius.circular(9999),
+                      ),
+                      child: Text(
+                        'Genre: ${book.genre!}',
+                        style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.textMuted,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 10),
+
+                  // Progress Box
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppTheme.surfaceInset,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Progress',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.text,
+                              ),
+                            ),
+                            Text(
+                              '${book.percent}%',
+                              style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.kicker,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(9999),
+                          child: LinearProgressIndicator(
+                            value: book.totalPages > 0
+                                ? (book.currentPage / book.totalPages).clamp(0.0, 1.0)
+                                : 0.0,
+                            backgroundColor: AppTheme.progressTrack,
+                            valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.primary),
+                            minHeight: 5,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${book.currentPage} / ${book.totalPages} pages (${book.percent}%)',
+                          style: const TextStyle(fontSize: 10, color: AppTheme.textMuted),
+                        ),
+                      ],
                     ),
                   ),
-                ),
+
+                  // Actions: Edit and Delete
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: () => _openEdit(book),
+                        borderRadius: BorderRadius.circular(9999),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: AppTheme.btnCardBg,
+                            borderRadius: BorderRadius.circular(9999),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.edit_outlined, size: 13, color: AppTheme.btnCardText),
+                              SizedBox(width: 4),
+                              Text(
+                                'Edit',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.btnCardText,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      InkWell(
+                        onTap: () => _confirmDelete(book),
+                        borderRadius: BorderRadius.circular(9999),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFDECEB),
+                            borderRadius: BorderRadius.circular(9999),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.delete_outline_rounded,
+                                  size: 13, color: Color(0xFFB9382E)),
+                              SizedBox(width: 4),
+                              Text(
+                                'Delete',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFFB9382E),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyPoster() {
+    return Container(
+      color: AppTheme.badgeIconBg,
+      child: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('📖', style: TextStyle(fontSize: 22)),
+            SizedBox(height: 4),
+            Text(
+              'NO POSTER',
+              style: TextStyle(
+                fontSize: 9,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.6,
+                color: Color(0xFF7D614E),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusBadge(String status, String label) {
+    Color bg;
+    Color text;
+    Color border;
+
+    switch (status) {
+      case 'reading':
+        bg = const Color(0xFFFEF3C7);
+        text = const Color(0xFF92400E);
+        border = const Color(0xFFFDE68A);
+      case 'finished':
+        bg = const Color(0xFFE3EDE2);
+        text = const Color(0xFF234E38);
+        border = const Color(0xFFC6DEC5);
+      case 'want_to_read':
+      default:
+        bg = AppTheme.accentLight;
+        text = AppTheme.kicker;
+        border = AppTheme.statusWantBorder;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: bg,
+        border: Border.all(color: border),
+        borderRadius: BorderRadius.circular(9999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 5,
+            height: 5,
+            decoration: BoxDecoration(color: text, shape: BoxShape.circle),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: text,
+            ),
+          ),
+        ],
       ),
     );
   }
