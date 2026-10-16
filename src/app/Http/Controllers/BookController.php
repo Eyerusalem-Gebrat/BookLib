@@ -99,13 +99,19 @@ class BookController extends Controller
             'poster' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
 
+        $newPosterPath = null;
+        $oldPosterPath = $book->poster_path;
+
         if ($request->hasFile('poster')) {
-            // Delete the old file first, so old posters don't pile up
-            if ($book->poster_path) {
-                Storage::disk('public')->delete($book->poster_path);
+            $newPosterPath = $request->file('poster')->store('posters', 'public');
+
+            if (!$newPosterPath) {
+                return back()
+                    ->withErrors(['poster' => 'Failed to upload the new cover image.'])
+                    ->withInput();
             }
 
-            $validated['poster_path'] = $request->file('poster')->store('posters', 'public');
+            $validated['poster_path'] = $newPosterPath;
         }
 
         // "poster" is a file object, not a database column
@@ -113,8 +119,18 @@ class BookController extends Controller
 
         $book->update($validated);
 
-        return redirect()->route('books.index')->with('success', 'Book updated successfully.');
-   }
+        // Delete the old cover only after the database update succeeds.
+        if (
+            $newPosterPath &&
+            $oldPosterPath &&
+            $oldPosterPath !== $newPosterPath
+        ) {
+            Storage::disk('public')->delete($oldPosterPath);
+        }
+
+        return redirect()->route('books.index')
+            ->with('success', 'Book updated successfully.');
+        }
 
     /**
      * Remove the specified resource from storage.
@@ -123,7 +139,18 @@ class BookController extends Controller
     public function destroy(Book $book): RedirectResponse
     {
         Gate::authorize('delete', $book);
+
+        $posterPath = $book->poster_path;
+
+        // Delete the database record first.
         $book->delete();
-        return redirect()->route('books.index')->with('success', 'Book deleted successfully.');
+
+        // Remove the image only after deletion succeeds.
+        if ($posterPath) {
+            Storage::disk('public')->delete($posterPath);
+        }
+
+        return redirect()->route('books.index')
+            ->with('success', 'Book deleted successfully.');
     }
 }

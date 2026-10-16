@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:booklib_app/config/app_theme.dart';
 import 'package:booklib_app/screens/home_screen.dart';
 import 'package:booklib_app/screens/landing_screen.dart';
 import 'package:booklib_app/services/auth_service.dart';
@@ -57,40 +58,120 @@ class _StartupScreenState extends State<StartupScreen> {
   @override
   Widget build(BuildContext context) {
     if (_checking) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(
+        backgroundColor: AppTheme.pageBg,
+        body: Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primary),
+          ),
+        ),
+      );
     }
 
     return Scaffold(
+      backgroundColor: AppTheme.pageBg,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Icon(Icons.cloud_off, size: 64),
-              const SizedBox(height: 16),
-              Text(
-                "Can't reach BookLib",
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headlineSmall,
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                decoration: BoxDecoration(
+                  color: AppTheme.cardBg,
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: AppTheme.cardBorder),
+                  boxShadow: const [AppTheme.cardShadow],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: const BoxDecoration(
+                        color: AppTheme.badgeIconBg,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.cloud_off_rounded,
+                        size: 32,
+                        color: AppTheme.kicker,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Can't reach BookLib",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: AppTheme.fontSerif,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.text,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Your login is saved. Check your connection and try again.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: AppTheme.textMuted,
+                        height: 1.4,
+                      ),
+                    ),
+                    const SizedBox(height: 26),
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(9999),
+                        boxShadow: const [AppTheme.primaryGlow],
+                      ),
+                      child: FilledButton(
+                        onPressed: _retry,
+                        style: FilledButton.styleFrom(
+                          backgroundColor: AppTheme.primary,
+                          shape: const StadiumBorder(),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        child: const Text(
+                          'Try again',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    InkWell(
+                      onTap: _logOut,
+                      borderRadius: BorderRadius.circular(9999),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          color: AppTheme.btnCardBg,
+                          border: Border.all(color: AppTheme.btnCardBorder),
+                          borderRadius: BorderRadius.circular(9999),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Log out',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.btnCardText,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 8),
-              const Text(
-                'Your login is saved. Check your connection and try again.',
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              FilledButton(
-                onPressed: _retry,
-                child: const Text('Try again'),
-              ),
-              const SizedBox(height: 8),
-              TextButton(
-                onPressed: _logOut,
-                child: const Text('Log out'),
-              ),
-            ],
+            ),
           ),
         ),
       ),

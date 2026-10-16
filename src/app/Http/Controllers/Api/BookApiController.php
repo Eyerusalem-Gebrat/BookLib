@@ -108,8 +108,16 @@ class BookApiController extends Controller
     {
         Gate::authorize('delete', $book);
 
+        $posterPath = $book->poster_path;
+
         $book->delete();
 
-        return response()->json(['message' => 'Book deleted.']);
+        if ($posterPath) {
+            Storage::disk('public')->delete($posterPath);
+        }
+
+        return response()->json([
+            'message' => 'Book deleted.',
+        ]);
     }
 }

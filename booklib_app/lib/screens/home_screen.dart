@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:booklib_app/config/app_theme.dart';
 import 'package:booklib_app/screens/landing_screen.dart';
 import 'package:booklib_app/services/api_exception.dart';
 import 'package:booklib_app/services/auth_service.dart';
@@ -167,63 +168,206 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.pageBg,
       appBar: AppBar(
-        title: const Text('API tester'),
+        backgroundColor: AppTheme.headerBg,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        title: const Row(
+          children: [
+            Text(
+              'BookLib',
+              style: TextStyle(
+                fontFamily: AppTheme.fontSerif,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.headerLogo,
+              ),
+            ),
+            SizedBox(width: 10),
+            Text(
+              '• API TESTER',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.8,
+                color: AppTheme.kicker,
+              ),
+            ),
+          ],
+        ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: 'Log out',
-            onPressed: _goToLogin,
+          Padding(
+            padding: const EdgeInsets.only(right: 14),
+            child: InkWell(
+              onTap: _goToLogin,
+              borderRadius: BorderRadius.circular(9999),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppTheme.btnCardBg,
+                  border: Border.all(color: AppTheme.btnCardBorder),
+                  borderRadius: BorderRadius.circular(9999),
+                ),
+                child: const Text(
+                  'Log out',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.btnCardText,
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(1),
+          child: Divider(height: 1, color: AppTheme.headerBorder),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                FilledButton(
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppTheme.cardBg,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: AppTheme.cardBorder),
+                boxShadow: const [AppTheme.cardShadow],
+              ),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  FilledButton(
                     onPressed: () => _run('List', _list),
-                    child: const Text('List')),
-                FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppTheme.primary,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    ),
+                    child: const Text('List'),
+                  ),
+                  FilledButton(
                     onPressed: () => _run('Create', _create),
-                    child: const Text('Create')),
-                FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppTheme.primary,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    ),
+                    child: const Text('Create'),
+                  ),
+                  FilledButton(
                     onPressed: () => _run('Update', _update),
-                    child: const Text('Update')),
-                FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppTheme.primary,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    ),
+                    child: const Text('Update'),
+                  ),
+                  FilledButton(
                     onPressed: () => _run('Delete', _delete),
-                    child: const Text('Delete')),
-                FilledButton.tonal(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: const Color(0xFFFDECEB),
+                      foregroundColor: const Color(0xFFB9382E),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    ),
+                    child: const Text('Delete'),
+                  ),
+                  FilledButton.tonal(
                     onPressed: () => _run('Invalid create', _invalid),
-                    child: const Text('Invalid data')),
-                FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppTheme.btnCardBg,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    ),
+                    child: const Text(
+                      'Invalid data',
+                      style: TextStyle(color: AppTheme.btnCardText),
+                    ),
+                  ),
+                  FilledButton(
                     onPressed: () => _run('Create with poster', _createWithPoster),
-                    child: const Text('Create + poster')),
-                FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppTheme.primary,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    ),
+                    child: const Text('Create + poster'),
+                  ),
+                  FilledButton(
                     onPressed: () => _run('Change poster', _changePoster),
-                    child: const Text('Change poster')),
-                FilledButton.tonal(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppTheme.primary,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    ),
+                    child: const Text('Change poster'),
+                  ),
+                  FilledButton.tonal(
                     onPressed: () => _run('Missing book', _missing),
-                    child: const Text('Missing book (404)')),
-                FilledButton.tonal(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppTheme.btnCardBg,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    ),
+                    child: const Text(
+                      'Missing book (404)',
+                      style: TextStyle(color: AppTheme.btnCardText),
+                    ),
+                  ),
+                  FilledButton.tonal(
                     onPressed: () => _run('Other user book', _forbidden),
-                    child: const Text("Other user's book (403)")),
-              ],
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppTheme.btnCardBg,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    ),
+                    child: const Text(
+                      "Other user's book (403)",
+                      style: TextStyle(color: AppTheme.btnCardText),
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 16),
             if (_posterUrl != null)
-              Image.network(
-                _posterUrl!,
-                height: 140,
-                errorBuilder: (_, _, _) => const Text('The poster could not be loaded'),
+              Center(
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppTheme.inputBorder),
+                    boxShadow: const [AppTheme.shadowSm],
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: Image.network(
+                    _posterUrl!,
+                    height: 140,
+                    errorBuilder: (_, _, _) => const Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Text('The poster could not be loaded'),
+                    ),
+                  ),
+                ),
               ),
             Expanded(
-              child: SingleChildScrollView(child: SelectableText(_output)),
+              child: Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: AppTheme.surfaceInset,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppTheme.inputBorder),
+                ),
+                child: SingleChildScrollView(
+                  child: SelectableText(
+                    _output,
+                    style: const TextStyle(
+                      fontFamily: 'monospace',
+                      fontSize: 12,
+                      color: AppTheme.text,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),

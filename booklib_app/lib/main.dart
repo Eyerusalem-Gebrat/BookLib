@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:booklib_app/config/app_theme.dart';
 import 'package:booklib_app/screens/startup_screen.dart';
 import 'package:booklib_app/services/session_manager.dart';
 
@@ -15,10 +16,7 @@ class BookLibApp extends StatelessWidget {
       title: 'BookLib',
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey, // lets SessionManager change screens
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.themeData,
       home: const StartupScreen(),
     );
   }
