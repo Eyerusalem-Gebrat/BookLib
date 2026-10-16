@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password as PasswordRule;
+use App\Support\ResetLink;
+use Illuminate\Validation\ValidationException;
 
 class PasswordResetApiController extends Controller
 {
@@ -30,6 +32,28 @@ class PasswordResetApiController extends Controller
         return response()->json([
             'message' =>
                 'If an account exists for this email, a password reset link will be sent.',
+        ]);
+    }
+
+        // Check a pasted reset link WITHOUT using it up
+    public function verifyLink(Request $request): JsonResponse
+    {
+        $data = $request->validate([
+            'link' => ['required', 'string', 'max:2000'],
+        ]);
+
+        $result = ResetLink::verify($data['link']);
+
+        if ($result === null) {
+            throw ValidationException::withMessages([
+                'link' => ['This link is not valid or has expired. Please request a new one.'],
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Link verified.',
+            'email' => $result['email'],
+            'token' => $result['token'],
         ]);
     }
 

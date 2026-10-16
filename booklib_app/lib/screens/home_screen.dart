@@ -3,7 +3,6 @@ import 'package:booklib_app/screens/landing_screen.dart';
 import 'package:booklib_app/services/api_exception.dart';
 import 'package:booklib_app/services/auth_service.dart';
 import 'package:booklib_app/services/book_service.dart';
-import 'package:booklib_app/screens/password_reset_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:booklib_app/services/poster_picker.dart';
 
@@ -202,13 +201,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 FilledButton.tonal(
                     onPressed: () => _run('Invalid create', _invalid),
                     child: const Text('Invalid data')),
-                FilledButton.tonal(
-                  onPressed: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (_) => const PasswordTesterScreen()),
-                  ),
-                  child: const Text('Password tests'),
-                ),
                 FilledButton(
                     onPressed: () => _run('Create with poster', _createWithPoster),
                     child: const Text('Create + poster')),

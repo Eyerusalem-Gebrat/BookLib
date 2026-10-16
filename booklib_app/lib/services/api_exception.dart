@@ -51,7 +51,7 @@ class ApiException implements Exception {
       message = fieldErrors.values.first;
     } else {
       message = switch (response.statusCode) {
-        403 => 'You are not allowed to do that.',
+        403 => serverMessage ?? 'You are not allowed to do that.',
         404 => 'That item could not be found. It may have been deleted.',
         429 => 'Too many attempts. Please wait a moment and try again.',
         >= 500 => 'The server had a problem. Please try again later.',

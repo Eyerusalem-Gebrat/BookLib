@@ -4,8 +4,17 @@ use App\Http\Controllers\BookController;
 use App\Models\Book;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ResetLinkController;
 
 Route::inertia('/', 'welcome')->name('home');
+
+Route::middleware('guest')->group(function () {
+    Route::get('verify-reset-link', [ResetLinkController::class, 'show'])->name('password.link');
+    Route::post('verify-reset-link', [ResetLinkController::class, 'verify'])
+        ->
+        middleware('throttle:6,1')
+        ->name('password.link.verify');
+});
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // The starter kit's dashboard is replaced by the books list

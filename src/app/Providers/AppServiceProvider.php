@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Carbon\CarbonInterval;
+use Laravel\Passport\Passport;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +25,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // The app logs in with personal access tokens: this one matters
+        Passport::personalAccessTokensExpireIn(CarbonInterval::days(30));
+
+        // For other OAuth flows we don't use yet; set to match
+        Passport::tokensExpireIn(CarbonInterval::days(30));
+        Passport::refreshTokensExpireIn(CarbonInterval::days(30));
         $this->configureDefaults();
     }
 

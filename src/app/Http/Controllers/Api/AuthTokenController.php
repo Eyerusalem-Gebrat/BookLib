@@ -33,8 +33,15 @@ class AuthTokenController extends Controller
             ]);
         }
 
-        // Tell the request logger who just logged in (this request had no token yet)
+        // Tell the request logger who is logging in (this request had no token yet)
         $request->attributes->set('log_user_id', $user->id);
+
+        // Only verified accounts may use the app
+        if (! $user->hasVerifiedEmail()) {
+            return response()->json([
+                'message' => 'Please verify your email address first, then log in again.',
+            ], 403);
+        }
 
         // Create a Passport access token
         $token = $user->createToken('mobile')->accessToken;

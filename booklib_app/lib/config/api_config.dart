@@ -1,9 +1,13 @@
 class ApiConfig {
-  // Private constructor: this class only holds settings, nobody creates objects from it
   ApiConfig._();
 
-    // With "adb reverse tcp:8000 tcp:8000", the phone's 127.0.0.1 reaches your computer
-  static const String host = 'http://127.0.0.1:8000';
+  // The server address. It is given when the app is run or built:
+  //   flutter run --dart-define=API_HOST=http://192.168.1.20:8000
+  // With no value, the app uses the USB setup (adb reverse tcp:8000 tcp:8000).
+  static const String host = String.fromEnvironment(
+    'API_HOST',
+    defaultValue: 'http://127.0.0.1:8000',
+  );
 
   // Every API route in Laravel starts with /api
   static const String baseUrl = '$host/api';
