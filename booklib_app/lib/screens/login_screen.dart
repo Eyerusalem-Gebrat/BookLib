@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:booklib_app/config/app_theme.dart';
+import 'package:booklib_app/screens/forgot_password_screen.dart';
 import 'package:booklib_app/screens/home_screen.dart';
 import 'package:booklib_app/services/api_exception.dart';
 import 'package:booklib_app/services/auth_service.dart';
@@ -85,7 +86,10 @@ class _LoginScreenState extends State<LoginScreen> {
               onTap: () => Navigator.of(context).maybePop(),
               borderRadius: BorderRadius.circular(9999),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 7,
+                ),
                 decoration: BoxDecoration(
                   color: AppTheme.btnCardBg,
                   border: Border.all(color: AppTheme.btnCardBorder),
@@ -124,7 +128,10 @@ class _LoginScreenState extends State<LoginScreen> {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 420),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 34),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 26,
+                  vertical: 34,
+                ),
                 decoration: BoxDecoration(
                   color: AppTheme.cardBg,
                   borderRadius: BorderRadius.circular(28),
@@ -204,9 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           margin: const EdgeInsets.only(bottom: 16),
                           decoration: BoxDecoration(
                             color: AppTheme.badgeGreenBg,
-                            border: Border.all(
-                              color: const Color(0xFFC6DEC5),
-                            ),
+                            border: Border.all(color: const Color(0xFFC6DEC5)),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -246,11 +251,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(9999),
-                            borderSide: const BorderSide(color: AppTheme.inputBorder),
+                            borderSide: const BorderSide(
+                              color: AppTheme.inputBorder,
+                            ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(9999),
-                            borderSide: const BorderSide(color: AppTheme.inputBorder),
+                            borderSide: const BorderSide(
+                              color: AppTheme.inputBorder,
+                            ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(9999),
@@ -303,15 +312,20 @@ class _LoginScreenState extends State<LoginScreen> {
                               color: AppTheme.textMuted,
                               size: 20,
                             ),
-                            onPressed: () => setState(() => _obscure = !_obscure),
+                            onPressed: () =>
+                                setState(() => _obscure = !_obscure),
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(9999),
-                            borderSide: const BorderSide(color: AppTheme.inputBorder),
+                            borderSide: const BorderSide(
+                              color: AppTheme.inputBorder,
+                            ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(9999),
-                            borderSide: const BorderSide(color: AppTheme.inputBorder),
+                            borderSide: const BorderSide(
+                              color: AppTheme.inputBorder,
+                            ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(9999),
@@ -324,6 +338,29 @@ class _LoginScreenState extends State<LoginScreen> {
                         validator: (value) => (value == null || value.isEmpty)
                             ? 'Enter your password'
                             : null,
+                      ),
+                      const SizedBox(height: 12),
+
+                      // Forgot your password? link
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const ForgotPasswordScreen(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Forgot your password?',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.kicker,
+                            ),
+                          ),
+                        ),
                       ),
 
                       // Error message
@@ -377,8 +414,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   width: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    valueColor:
-                                        AlwaysStoppedAnimation<Color>(Colors.white),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white,
+                                    ),
                                   ),
                                 )
                               : const Text(
