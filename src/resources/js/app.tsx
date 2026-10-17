@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/sonner';
 // Enables small informational popups when hovering 
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { initializeTheme } from '@/hooks/use-appearance'; // Apperance settings light/dark mode
+import AdminLayout from '@/layouts/admin-layout';
 import AuthLayout from '@/layouts/auth-layout';
 import BooksLayout from '@/layouts/books-layout';
 import SettingsLayout from '@/layouts/settings/layout';
@@ -20,6 +21,8 @@ void createInertiaApp({
                 return AuthLayout;
             case name.startsWith('settings/'):
                 return [BooksLayout, SettingsLayout];
+            case name.startsWith('admin/'):
+                return AdminLayout;
             default:
                 return BooksLayout;
         }
