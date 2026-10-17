@@ -13,5 +13,8 @@ class ApiConfig {
   static const String baseUrl = '$host/api';
 
   // Laravel saves posters as "posters/abc.jpg" and serves them from /storage
-  static String posterUrl(String path) => '$host/storage/$path';
+  static String posterUrl(String path) {
+  final cleanPath = path.replaceFirst(RegExp(r'^/+'), '');
+  return '$host/storage/$cleanPath';
+  }
 }

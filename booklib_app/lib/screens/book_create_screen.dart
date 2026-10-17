@@ -1,12 +1,12 @@
-import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:booklib_app/config/app_theme.dart';
 import 'package:booklib_app/services/api_exception.dart';
 import 'package:booklib_app/services/book_service.dart';
-import 'package:booklib_app/services/poster_picker.dart';
 
-/// Screen 3: Create book form matching website's create.tsx page
+/// Screen 3: Create book form matching website's create.tsx page.
 class BookCreateScreen extends StatefulWidget {
   const BookCreateScreen({super.key});
 
@@ -23,11 +23,13 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
   final _totalPagesController = TextEditingController();
   final _currentPageController = TextEditingController(text: '0');
 
+  final BookService _bookService = BookService();
+  final ImagePicker _imagePicker = ImagePicker();
+
   String _status = 'want_to_read';
-  File? _poster;
+  XFile? _poster;
   bool _saving = false;
   String? _error;
-  final BookService _bookService = BookService();
 
   @override
   void dispose() {
@@ -54,12 +56,18 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: const Icon(Icons.photo_library_outlined, color: AppTheme.primary),
+                leading: const Icon(
+                  Icons.photo_library_outlined,
+                  color: AppTheme.primary,
+                ),
                 title: const Text('Choose from Gallery'),
                 onTap: () => Navigator.of(ctx).pop(ImageSource.gallery),
               ),
               ListTile(
-                leading: const Icon(Icons.camera_alt_outlined, color: AppTheme.primary),
+                leading: const Icon(
+                  Icons.camera_alt_outlined,
+                  color: AppTheme.primary,
+                ),
                 title: const Text('Take a Photo'),
                 onTap: () => Navigator.of(ctx).pop(ImageSource.camera),
               ),
@@ -72,14 +80,36 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
     if (source == null) return;
 
     try {
-      final file = await PosterPicker.pick(source);
-      if (file != null && mounted) {
-        setState(() => _poster = file);
+      final pickedImage = await _imagePicker.pickImage(
+        source: source,
+        maxWidth: 1200,
+        maxHeight: 1800,
+        imageQuality: 85,
+      );
+
+      if (pickedImage == null) return;
+
+      const maxBytes = 2 * 1024 * 1024;
+      final imageSize = await pickedImage.length();
+
+      if (imageSize > maxBytes) {
+        throw const ApiException(
+          'The image is larger than 2 MB. Please choose a smaller one.',
+        );
       }
+
+      if (!mounted) return;
+      setState(() {
+        _poster = pickedImage;
+        _error = null;
+      });
     } on ApiException catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message), backgroundColor: const Color(0xFFB9382E)),
+        SnackBar(
+          content: Text(e.message),
+          backgroundColor: const Color(0xFFB9382E),
+        ),
       );
     } catch (_) {
       if (!mounted) return;
@@ -94,9 +124,12 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
 
   void _onStatusChanged(String? newStatus) {
     if (newStatus == null) return;
+
     setState(() {
       _status = newStatus;
-      if (newStatus == 'finished' && _totalPagesController.text.isNotEmpty) {
+
+      if (newStatus == 'finished' &&
+          _totalPagesController.text.isNotEmpty) {
         _currentPageController.text = _totalPagesController.text;
       }
     });
@@ -117,7 +150,8 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     final totalPages = int.tryParse(_totalPagesController.text.trim()) ?? 0;
-    final currentPage = int.tryParse(_currentPageController.text.trim()) ?? 0;
+    final currentPage =
+        int.tryParse(_currentPageController.text.trim()) ?? 0;
 
     if (totalPages < 1) {
       setState(() => _error = 'Total pages must be at least 1.');
@@ -126,6 +160,11 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
 
     if (currentPage < 0) {
       setState(() => _error = 'Pages read cannot be negative.');
+      return;
+    }
+
+    if (currentPage > totalPages) {
+      setState(() => _error = 'Pages read cannot exceed total pages.');
       return;
     }
 
@@ -158,7 +197,7 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
         _saving = false;
         _error = e.message;
       });
-    } catch (e) {
+    } catch (_) {
       if (!mounted) return;
       setState(() {
         _saving = false;
@@ -183,7 +222,10 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
               onTap: () => Navigator.of(context).pop(),
               borderRadius: BorderRadius.circular(9999),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: AppTheme.btnCardBg,
                   border: Border.all(color: AppTheme.btnCardBorder),
@@ -229,7 +271,10 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 24,
+          ),
           child: Form(
             key: _formKey,
             child: Container(
@@ -243,7 +288,6 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Kicker
                   const Text(
                     '• LIBRARY CATALOG',
                     style: TextStyle(
@@ -254,8 +298,6 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
                     ),
                   ),
                   const SizedBox(height: 4),
-
-                  // Heading
                   const Text(
                     'Add a New Book',
                     style: TextStyle(
@@ -266,10 +308,9 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
                     ),
                   ),
                   const SizedBox(height: 4),
-
-                  // Subtitle
                   const Text(
-                    'Fill in the book details to expand your personal collection and reading tracker.',
+                    'Fill in the book details to expand your personal '
+                    'collection and reading tracker.',
                     style: TextStyle(
                       fontSize: 12,
                       color: AppTheme.textMuted,
@@ -284,12 +325,17 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
                       margin: const EdgeInsets.only(bottom: 20),
                       decoration: BoxDecoration(
                         color: const Color(0xFFFDECEB),
-                        border: Border.all(color: const Color(0xFFF8CFCB)),
+                        border: Border.all(
+                          color: const Color(0xFFF8CFCB),
+                        ),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(
                         children: [
-                          const Text('⚠  ', style: TextStyle(fontSize: 14)),
+                          const Text(
+                            '⚠  ',
+                            style: TextStyle(fontSize: 14),
+                          ),
                           Expanded(
                             child: Text(
                               _error!,
@@ -305,7 +351,6 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
                     ),
                   ],
 
-                  // Title with Required Badge
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -318,7 +363,10 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: AppTheme.accentLight,
                           borderRadius: BorderRadius.circular(9999),
@@ -337,13 +385,16 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
                   const SizedBox(height: 6),
                   TextFormField(
                     controller: _titleController,
-                    decoration: const InputDecoration(hintText: 'e.g., The Midnight Library'),
+                    decoration: const InputDecoration(
+                      hintText: 'e.g., The Midnight Library',
+                    ),
                     validator: (val) =>
-                        (val == null || val.trim().isEmpty) ? 'Title is required' : null,
+                        (val == null || val.trim().isEmpty)
+                            ? 'Title is required'
+                            : null,
                   ),
                   const SizedBox(height: 18),
 
-                  // Author
                   const Text(
                     'Author',
                     style: TextStyle(
@@ -355,13 +406,16 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
                   const SizedBox(height: 6),
                   TextFormField(
                     controller: _authorController,
-                    decoration: const InputDecoration(hintText: 'e.g., Matt Haig'),
+                    decoration: const InputDecoration(
+                      hintText: 'e.g., Matt Haig',
+                    ),
                     validator: (val) =>
-                        (val == null || val.trim().isEmpty) ? 'Author is required' : null,
+                        (val == null || val.trim().isEmpty)
+                            ? 'Author is required'
+                            : null,
                   ),
                   const SizedBox(height: 18),
 
-                  // Genre
                   const Text(
                     'Genre',
                     style: TextStyle(
@@ -373,11 +427,12 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
                   const SizedBox(height: 6),
                   TextFormField(
                     controller: _genreController,
-                    decoration: const InputDecoration(hintText: 'e.g., Fiction, Philosophy, Sci-Fi'),
+                    decoration: const InputDecoration(
+                      hintText: 'e.g., Fiction, Philosophy, Sci-Fi',
+                    ),
                   ),
                   const SizedBox(height: 18),
 
-                  // Description
                   const Text(
                     'Description',
                     style: TextStyle(
@@ -394,21 +449,27 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
                       hintText: 'Write a brief summary or key impressions...',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(color: AppTheme.inputBorder),
+                        borderSide: const BorderSide(
+                          color: AppTheme.inputBorder,
+                        ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(color: AppTheme.inputBorder),
+                        borderSide: const BorderSide(
+                          color: AppTheme.inputBorder,
+                        ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(color: AppTheme.primary, width: 1.5),
+                        borderSide: const BorderSide(
+                          color: AppTheme.primary,
+                          width: 1.5,
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 18),
 
-                  // Poster
                   const Text(
                     'Poster',
                     style: TextStyle(
@@ -426,20 +487,57 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(10),
-                            child: Image.file(_poster!, height: 120, fit: BoxFit.cover),
+                            child: FutureBuilder<Uint8List>(
+                              future: _poster!.readAsBytes(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return Image.memory(
+                                    snapshot.data!,
+                                    height: 120,
+                                    fit: BoxFit.cover,
+                                  );
+                                }
+
+                                if (snapshot.hasError) {
+                                  return const SizedBox(
+                                    height: 120,
+                                    width: 90,
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.broken_image_outlined,
+                                      ),
+                                    ),
+                                  );
+                                }
+
+                                return const SizedBox(
+                                  height: 120,
+                                  width: 90,
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                           Positioned(
                             top: 4,
                             left: 4,
                             child: InkWell(
-                              onTap: () => setState(() => _poster = null),
+                              onTap: () {
+                                setState(() => _poster = null);
+                              },
                               child: Container(
                                 padding: const EdgeInsets.all(4),
                                 decoration: const BoxDecoration(
                                   color: Colors.black54,
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(Icons.close, size: 14, color: Colors.white),
+                                child: const Icon(
+                                  Icons.close,
+                                  size: 14,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
@@ -448,7 +546,10 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
                     ),
 
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                     decoration: BoxDecoration(
                       color: AppTheme.surfaceInset,
                       borderRadius: BorderRadius.circular(14),
@@ -460,9 +561,12 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
                         Expanded(
                           child: Text(
                             _poster != null
-                                ? _poster!.path.split(Platform.pathSeparator).last
+                                ? _poster!.name
                                 : 'No file chosen\nPNG, JPG, WEBP up to 2MB',
-                            style: const TextStyle(fontSize: 12, color: AppTheme.textMuted),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppTheme.textMuted,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -493,7 +597,6 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
                   ),
                   const SizedBox(height: 18),
 
-                  // Status
                   const Text(
                     'Status',
                     style: TextStyle(
@@ -504,19 +607,32 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
                   ),
                   const SizedBox(height: 6),
                   DropdownButtonFormField<String>(
-                    value: _status,
+                    initialValue: _status,
                     dropdownColor: AppTheme.cardBg,
-                    decoration: const InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 18, vertical: 12)),
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 18,
+                        vertical: 12,
+                      ),
+                    ),
                     items: const [
-                      DropdownMenuItem(value: 'want_to_read', child: Text('Want to Read')),
-                      DropdownMenuItem(value: 'reading', child: Text('Reading')),
-                      DropdownMenuItem(value: 'finished', child: Text('Finished')),
+                      DropdownMenuItem(
+                        value: 'want_to_read',
+                        child: Text('Want to Read'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'reading',
+                        child: Text('Reading'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'finished',
+                        child: Text('Finished'),
+                      ),
                     ],
                     onChanged: _onStatusChanged,
                   ),
                   const SizedBox(height: 18),
 
-                  // Total pages and Pages read
                   Row(
                     children: [
                       Expanded(
@@ -535,13 +651,19 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
                             TextFormField(
                               controller: _totalPagesController,
                               keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(hintText: 'e.g., 304'),
+                              decoration: const InputDecoration(
+                                hintText: 'e.g., 304',
+                              ),
                               validator: (val) {
                                 if (val == null || val.trim().isEmpty) {
                                   return 'Required';
                                 }
+
                                 final n = int.tryParse(val);
-                                if (n == null || n < 1) return 'Must be >= 1';
+                                if (n == null || n < 1) {
+                                  return 'Must be >= 1';
+                                }
+
                                 return null;
                               },
                             ),
@@ -566,13 +688,28 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
                               controller: _currentPageController,
                               keyboardType: TextInputType.number,
                               onChanged: _onCurrentPageChanged,
-                              decoration: const InputDecoration(hintText: '0'),
+                              decoration: const InputDecoration(
+                                hintText: '0',
+                              ),
                               validator: (val) {
                                 if (val == null || val.trim().isEmpty) {
                                   return 'Required';
                                 }
+
                                 final n = int.tryParse(val);
-                                if (n == null || n < 0) return 'Must be >= 0';
+                                if (n == null || n < 0) {
+                                  return 'Must be >= 0';
+                                }
+
+                                final total = int.tryParse(
+                                      _totalPagesController.text.trim(),
+                                    ) ??
+                                    0;
+
+                                if (n > total) {
+                                  return 'Cannot exceed total';
+                                }
+
                                 return null;
                               },
                             ),
@@ -583,19 +720,22 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
                   ),
                   const SizedBox(height: 30),
 
-                  // Action Buttons: Cancel (Peach) + Save Book (Terracotta)
                   Row(
                     children: [
                       Expanded(
                         flex: 2,
                         child: InkWell(
-                          onTap: _saving ? null : () => Navigator.of(context).pop(),
+                          onTap: _saving
+                              ? null
+                              : () => Navigator.of(context).pop(),
                           borderRadius: BorderRadius.circular(9999),
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 13),
                             decoration: BoxDecoration(
                               color: AppTheme.btnCardBg,
-                              border: Border.all(color: AppTheme.btnCardBorder),
+                              border: Border.all(
+                                color: AppTheme.btnCardBorder,
+                              ),
                               borderRadius: BorderRadius.circular(9999),
                             ),
                             child: const Center(
@@ -627,7 +767,9 @@ class _BookCreateScreenState extends State<BookCreateScreen> {
                                   height: 18,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation(Colors.white),
+                                    valueColor: AlwaysStoppedAnimation(
+                                      Colors.white,
+                                    ),
                                   ),
                                 )
                               : const Text(

@@ -95,7 +95,7 @@ export default function BooksEdit({ book }: BooksEditProps) {
             {book.poster_path && (
               <img
                 className="current-poster"
-                src={`/storage/${book.poster_path}`}
+                src={`/storage/${book.poster_path.replace(/^\/+/, '')}`}
                 alt={`Poster of ${book.title}`}
               />
             )}

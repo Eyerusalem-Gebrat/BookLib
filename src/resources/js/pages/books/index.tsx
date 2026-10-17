@@ -81,7 +81,7 @@ export default function BooksIndex({ books }: BooksIndexProps) {
                   {book.poster_path ? (
                     <img
                       className="book-poster"
-                      src={`/storage/${book.poster_path}`}
+                      src={`/storage/${book.poster_path.replace(/^\/+/, '')}`}
                       alt={`Poster of ${book.title}`}
                     />
                   ) : (

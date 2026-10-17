@@ -1,6 +1,7 @@
-import 'dart:io';
+
 import 'package:booklib_app/models/book.dart';
 import 'package:booklib_app/services/api_client.dart';
+import 'package:image_picker/image_picker.dart';
 
 class BookService {
   final ApiClient _api = ApiClient();
@@ -9,7 +10,7 @@ class BookService {
   Future<List<Book>> getBooks() async {
     final data = await _api.get('/books');
 
-    // Accepts a plain list, or a Laravel page like {"data": [...]}
+    // Accept a plain list or a Laravel response like {"data": [...]}
     final list = data is Map<String, dynamic> ? data['data'] : data;
 
     return (list as List)
@@ -32,7 +33,7 @@ class BookService {
     required String status,
     required int totalPages,
     required int currentPage,
-    File? poster,
+    XFile? poster,
   }) async {
     final fields = _fields(
       title: title,
@@ -44,11 +45,17 @@ class BookService {
       currentPage: currentPage,
     );
 
-    final data = await _api.postMultipart('/books', fields, file: poster);
+    final data = await _api.postMultipart(
+      '/books',
+      fields,
+      fileBytes: poster == null ? null : await poster.readAsBytes(),
+      fileName: poster?.name,
+    );
+
     return Book.fromJson(_bookMap(data));
   }
 
-  // PUT /api/books/{id} (sent as POST + "_method=PUT", see the notes below)
+  // PUT /api/books/{id}, sent as POST + "_method=PUT"
   Future<Book> updateBook(
     int id, {
     required String title,
@@ -58,7 +65,7 @@ class BookService {
     required String status,
     required int totalPages,
     required int currentPage,
-    File? poster,
+    XFile? poster,
   }) async {
     final fields = _fields(
       title: title,
@@ -70,7 +77,13 @@ class BookService {
       currentPage: currentPage,
     )..['_method'] = 'PUT';
 
-    final data = await _api.postMultipart('/books/$id', fields, file: poster);
+    final data = await _api.postMultipart(
+      '/books/$id',
+      fields,
+      fileBytes: poster == null ? null : await poster.readAsBytes(),
+      fileName: poster?.name,
+    );
+
     return Book.fromJson(_bookMap(data));
   }
 
@@ -79,8 +92,7 @@ class BookService {
     await _api.delete('/books/$id');
   }
 
-  // Form fields are always text. Empty genre/description are sent as '' so
-  // Laravel turns them into null and clears the old value.
+  // Convert form values to text fields for Laravel.
   Map<String, String> _fields({
     required String title,
     required String author,
@@ -101,8 +113,7 @@ class BookService {
     };
   }
 
-  // Finds the book object whether Laravel returned it directly
-  // or wrapped as {"message": "...", "book": {...}}
+  // Handle a direct book response or a wrapped response.
   Map<String, dynamic> _bookMap(dynamic data) {
     final map = data as Map<String, dynamic>;
     final inner = map['book'] ?? map['data'];
