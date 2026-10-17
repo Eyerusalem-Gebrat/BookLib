@@ -5,6 +5,7 @@ use App\Models\Book;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ResetLinkController;
+use App\Http\Controllers\AdminDashboardController;
 
 Route::inertia('/', 'welcome')->name('home');
 
@@ -18,7 +19,14 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // The starter kit's dashboard is replaced by the books list
-    Route::redirect('dashboard', '/books')->name('dashboard');
+    Route::get('dashboard', function () {
+        return auth()->user()->is_admin
+            ? redirect()->route('admin.dashboard')
+            : redirect('/books');
+    })->name('dashboard');
+
+Route::get('admin', [AdminDashboardController::class, 'index'])
+    ->name('admin.dashboard');
 
     // N+1 demo: shows the number of queries before and after the fix
     Route::get('demo/n-plus-one', function () {
