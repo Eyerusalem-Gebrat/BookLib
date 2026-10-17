@@ -1,4 +1,4 @@
-# BookLib 📚
+# BookLib
 
 BookLib is a book management application that helps users organize their reading lists and track their reading progress through a web application and a Flutter mobile app.
 
